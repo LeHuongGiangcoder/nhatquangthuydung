@@ -49,7 +49,7 @@ export function Hero({ guestName }: HeroProps = {}) {
           <p className="invite-line">{HERO.invite}</p>
         </Reveal>
 
-        <Reveal delay={2} className="mt-5 w-full">
+        <Reveal delay={2} className="mt-[var(--space-3)] w-full">
           <Image
             src={MONOGRAM.src}
             alt="Monogram Nhật Quang & Thùy Dung"
@@ -61,7 +61,7 @@ export function Hero({ guestName }: HeroProps = {}) {
           />
         </Reveal>
 
-        <Reveal delay={3} className="mt-5">
+        <Reveal delay={3} className="mt-[var(--space-4)]">
           <h1 className="display-1">{COUPLE.groom}</h1>
         </Reveal>
 

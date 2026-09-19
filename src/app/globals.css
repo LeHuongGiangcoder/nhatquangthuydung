@@ -36,7 +36,7 @@
   --spacing-section: 3rem;
   --spacing-section-lg: 7rem;
   /* Dùng cho .section--fit: đây là toàn bộ khoảng cách giữa hai section ngắn */
-  --spacing-section-fit: 3.5rem;
+  --spacing-section-fit: var(--space-5);
   --spacing-gutter: 1.5rem;
 
   /* Bo góc & đổ bóng mềm */
@@ -47,13 +47,42 @@
   --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   QUY TẮC KHOẢNG CÁCH — áp dụng cho mọi section, không đặt số lẻ tẻ
+   ------------------------------------------------------------------
+   Thang 5 bậc, mọi khoảng cách dọc chỉ lấy từ đây:
+     --space-1  0.5rem   chữ đi liền: tên ↔ chú thích, số ↔ nhãn
+     --space-2  1rem     trong một cụm: minh hoạ tiêu đề ↔ eyebrow
+     --space-3  1.5rem   giữa các phần tử của một khối (monogram ↔ tên)
+     --space-4  2.5rem   giữa các khối trong section; tiêu đề → nội dung;
+                         khoảng hở ngang giữa nội dung và trục (agenda)
+     --space-5  3.5rem   đệm trên / dưới của section
+   Luật đi kèm:
+   R1. Section: đệm dọc = --space-5 (.section--fit).
+   R2. Tiêu đề: minh hoạ → eyebrow = --space-2; eyebrow → tiêu đề =
+       --heading-gap; hoa văn → nội dung = --space-4.
+   R3. Các khối kế nhau trong section cách nhau --space-4.
+   R4. Section giáp dải hoa ngăn (FlowerDivider): cạnh giáp được đệm
+       --divider-clear = nửa chiều cao dải hoa + --space-4, để dải hoa
+       luôn cách nội dung hai bên đúng một nhịp.
+   R5. Mỗi màn hình chỉ một "điểm nhấn" trang trí. Section đã có dải hoa
+       mở đầu thì bỏ minh hoạ trên tiêu đề; trang trí phụ chỉ nằm ở mép.
+   ══════════════════════════════════════════════════════════════════ */
 :root {
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 3.5rem;
+  /* Dải hoa rộng min(92% trang, 34rem), tỉ lệ ảnh ~0.27 → nửa cao ≈ 0.14 × rộng */
+  --divider-clear: calc(min(92vw, 34rem) * 0.14 + var(--space-4));
+
   /* Biến layout dùng lại ở mọi nơi */
   --gutter: 1.5rem;
   --content-max: 26rem; /* 416px — khung nội dung mobile-first */
   --stack: 1.25rem; /* khoảng cách mặc định giữa các khối trong section */
   --heading-gap: 0.75rem; /* eyebrow -> heading */
-  --heading-lead: 2.25rem; /* heading -> nội dung, dùng chung mọi section */
+  --heading-lead: var(--space-4); /* heading -> nội dung, dùng chung mọi section (R2) */
 }
 
 @media (min-width: 768px) {
@@ -187,8 +216,19 @@
     text-align: center;
   }
 
+  /* Ngay dưới gấu ruy băng: chỉ chừa đúng dải băng ngang (~10% bề ngang
+     trang) + một nhịp --space-4. Đuôi nơ thả dọc mép phải, không đụng tiêu
+     đề canh giữa nên không cần đẩy tiêu đề xuống dưới cả đuôi nơ. */
   .section--after-ribbon {
-    padding-top: max(var(--spacing-section-fit), calc(min(100vw, 40rem) * 0.29));
+    padding-top: calc(min(100vw, 40rem) * 0.1 + var(--space-4));
+  }
+
+  /* R4 — giáp dải hoa ngăn */
+  .section--before-divider {
+    padding-bottom: max(var(--space-5), var(--divider-clear));
+  }
+  .section--after-divider {
+    padding-top: max(var(--space-5), var(--divider-clear));
   }
 
   /* Nội dung bên trong section — luôn nằm trên decor */
@@ -692,12 +732,12 @@
   /* Bảng màu dresscode */
   /* Một hàng duy nhất, các đĩa màu chồng nhẹ lên nhau như bảng màu mẫu.
      flex:1 cho mọi cột bằng nhau, margin âm kéo đĩa sau đè lên đĩa trước. */
-  /* Bảng màu nằm trong tấm giấy ren: 8 màu = hai hàng bốn đĩa, mọi kích
-     thước theo bề ngang tấm giấy (cqw của .dress-card). */
+  /* Bảng màu nằm trong tấm giấy ren: 8 đĩa màu (hai hàng bốn), không chữ,
+     đĩa to hết cỡ lòng giấy. Kích thước theo bề ngang tấm giấy (cqw). */
   .swatch-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 2.6cqw 4cqw;
+    gap: 5cqw 4.5cqw;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -705,16 +745,13 @@
   }
 
   .swatch {
-    min-width: 0;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.2cqw;
+    justify-content: center;
   }
 
   .swatch-dot {
     display: block;
-    width: 10.5cqw;
+    width: 13.5cqw;
     aspect-ratio: 1;
     border-radius: 50%;
     /* Viền vàng mảnh, không đổ bóng — bảng màu phải sạch, phẳng */
@@ -722,32 +759,11 @@
     box-shadow: none;
   }
 
-  /* Tên màu: serif nghiêng, viết hoa đầu chữ — không phải label in hoa */
-  .swatch-name {
-    font-family: var(--font-body);
-    font-style: italic;
-    font-size: max(0.625rem, 2.7cqw);
-    line-height: 1.2;
-    color: var(--color-olive-soft);
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  /* ── Dresscode: giấy ren + giày ── */
-  /* Giày cắt thẳng ở mép dưới: bỏ đệm dưới để chân giày chạm ranh giới */
-  .section--shoes {
-    padding-bottom: 0;
-    overflow: hidden;
-  }
-
-  .dress-card-wrap {
-    position: relative;
-    margin-top: 1.75rem;
-    margin-inline: calc(var(--gutter) * -0.5);
-  }
-
+  /* ── Dresscode: tấm giấy ren chứa bảng màu ── */
   .dress-card {
     position: relative;
+    margin-top: var(--space-4);
+    margin-inline: calc(var(--gutter) * -0.5);
     container-type: inline-size;
   }
 
@@ -758,39 +774,16 @@
     filter: drop-shadow(0 10px 18px rgba(84, 78, 48, 0.16));
   }
 
+  /* Lòng giấy đo trên lace-paper.webp: 14–86% ngang, 17–83% dọc */
   .dress-card-body {
     position: absolute;
-    top: 18%;
-    bottom: 18%;
+    top: 17%;
+    bottom: 17%;
     left: 15%;
     right: 15%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3cqw;
-  }
-
-  .dress-card-label {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: max(0.625rem, 2.5cqw);
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--color-gold);
-  }
-
-  /* Đôi giày bước tới mép dưới tấm giấy: kéo lên đè viền ren một đoạn,
-     nằm trên giấy. Ảnh lệch phải sẵn (giày chú rể sát mép phải). */
-  .dress-shoes {
-    position: relative;
-    z-index: 1;
-    display: block;
-    width: 74%;
-    height: auto;
-    margin: -8% 0 0 auto;
-    filter: drop-shadow(0 -4px 10px rgba(84, 78, 48, 0.12));
   }
 
 
@@ -832,7 +825,8 @@
     display: block;
     width: auto;
     max-width: 9rem;
-    margin: 0 auto 0.35rem;
+    /* cộng với gap của .section-head thành đúng --space-2 (R2) */
+    margin: 0 auto calc(var(--space-2) - var(--heading-gap));
     object-fit: contain;
     user-select: none;
     pointer-events: none;
@@ -947,8 +941,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
-    margin-top: 1.75rem;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
     text-align: center;
   }
 
@@ -989,14 +983,15 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) 2.25rem minmax(0, 1fr);
     align-items: center;
-    column-gap: 0.75rem;
+    /* khoảng hở giữa chữ / minh hoạ và trục lượn (xem thang khoảng cách) */
+    column-gap: var(--space-3);
     height: var(--agenda-row);
   }
 
   .agenda-event {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: var(--space-1);
   }
 
   .agenda-row--left .agenda-event {
@@ -1037,7 +1032,7 @@
   .agenda-title {
     margin: 0;
     font-family: var(--font-display);
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     line-height: 1.12;
     color: var(--color-olive);
     text-wrap: balance;
@@ -1046,7 +1041,7 @@
   .agenda-art {
     display: block;
     width: auto;
-    height: 6rem;
+    height: 5.25rem;
     max-width: 100%;
     object-fit: contain;
   }

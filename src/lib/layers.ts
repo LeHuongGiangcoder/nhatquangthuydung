@@ -69,8 +69,6 @@ export const ELEMENTS = {
 
   /** Tấm giấy viền ren (cắt từ design/lace-paper.png). Lòng giấy ~14–86% ngang, 17–83% dọc. */
   "lace-paper": { src: "/assets/lace-paper.webp", w: 1200, h: 857 },
-  /** Giày cô dâu + giày chú rể nhìn từ trên xuống; mép dưới cắt thẳng. */
-  shoes: { src: "/assets/shoes.webp", w: 900, h: 749 },
   /** Dải hoa ngang ngăn giữa hai section — ghép từ các bó trong design/flower.png. */
   "flower-divider-a": { src: "/assets/flower-divider-a.webp", w: 1100, h: 300 },
   "flower-divider-b": { src: "/assets/flower-divider-b.webp", w: 952, h: 300 },

@@ -20,7 +20,7 @@ import { COUPLE, PARTIES, type Party } from "@/lib/content";
  */
 export function TimeVenue({ party = PARTIES.main }: { party?: Party } = {}) {
   return (
-    <section id="time-venue" className="section section--fit relative">
+    <section id="time-venue" className="section section--fit section--before-divider relative">
       <div className="section-inner">
         <Reveal className="section-head">
           <HeadArt id="el-rings" height="4.5rem" />
@@ -73,7 +73,7 @@ export function TimeVenue({ party = PARTIES.main }: { party?: Party } = {}) {
           <p className="time-lunar">({COUPLE.lunar})</p>
         </Reveal>
 
-        <Reveal delay={3} className="btn-row mt-7">
+        <Reveal delay={3} className="btn-row mt-[var(--space-4)]">
           <a
             className="btn btn--outline"
             href={party.mapUrl}

@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Cross } from "@/components/Cross";
 import { Decor } from "@/components/Decor";
 import { Divider } from "@/components/Divider";
-import { HeadArt } from "@/components/HeadArt";
 import { Reveal } from "@/components/Reveal";
 import { AGENDA } from "@/lib/content";
 import { ART } from "@/lib/layers";
@@ -14,7 +13,7 @@ import { ART } from "@/lib/layers";
  * Toạ độ theo lưới 100 × (100·số mốc): mỗi mốc chiếm đúng một hàng cao 100.
  */
 function trackPath(rows: number) {
-  const bulge = (i: number) => (i % 2 === 0 ? 62 : 38);
+  const bulge = (i: number) => (i % 2 === 0 ? 60 : 40);
   let d = `M50 0 C 50 12, ${100 - bulge(0)} 17, 50 50`;
   for (let i = 0; i < rows - 1; i++) {
     const y = 50 + i * 100;
@@ -29,7 +28,7 @@ export function Agenda() {
   return (
     <section
       id="agenda"
-      className="section section--dense section--bleed relative z-[3] pb-[16rem]"
+      className="section section--dense section--after-divider section--bleed relative z-[3] pb-[16rem]"
     >
       {/* Bên trái cột rèm, bên phải tượng Aphrodite — cả hai đứng sau dải cẩm
           tú cầu ở gấu, thứ tự DOM quyết định lớp trên vì mọi .decor đều z-0. */}
@@ -62,7 +61,6 @@ export function Agenda() {
 
       <div className="section-inner flex flex-col justify-center">
         <Reveal className="section-head">
-          <HeadArt id="el-candles" height="5rem" />
           <p className="eyebrow">Trình tự buổi tiệc</p>
           <h2 className="display-2">Chương trình</h2>
           <Divider />
