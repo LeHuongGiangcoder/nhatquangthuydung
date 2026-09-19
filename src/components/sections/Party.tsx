@@ -3,6 +3,7 @@ import { Agenda } from "@/components/sections/Agenda";
 import { Artists } from "@/components/sections/Artists";
 import { Dresscode } from "@/components/sections/Dresscode";
 import { Rsvp, type RsvpGuest } from "@/components/sections/Rsvp";
+import { FlowerDivider } from "@/components/FlowerDivider";
 import { PARTIES } from "@/lib/content";
 
 /**
@@ -18,8 +19,10 @@ export function Party({ guest }: { guest?: RsvpGuest } = {}) {
   return (
     <>
       <TimeVenue party={PARTIES.main} />
+      <FlowerDivider id="flower-divider-a" />
       <Agenda />
       <Artists />
+      <FlowerDivider id="flower-divider-b" />
       <Dresscode />
       <Rsvp party={PARTIES.main} guest={guest} />
     </>

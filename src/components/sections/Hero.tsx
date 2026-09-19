@@ -56,8 +56,8 @@ export function Hero({ guestName }: HeroProps = {}) {
             width={MONOGRAM.w}
             height={MONOGRAM.h}
             priority
-            sizes="(max-width: 640px) 19vw, 112px"
-            className="mx-auto block h-auto w-[19%] max-w-[7rem]"
+            sizes="(max-width: 640px) 13vw, 80px"
+            className="mx-auto block h-auto w-[13%] max-w-[4.75rem]"
           />
         </Reveal>
 

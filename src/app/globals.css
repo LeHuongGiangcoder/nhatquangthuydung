@@ -692,13 +692,14 @@
   /* Bảng màu dresscode */
   /* Một hàng duy nhất, các đĩa màu chồng nhẹ lên nhau như bảng màu mẫu.
      flex:1 cho mọi cột bằng nhau, margin âm kéo đĩa sau đè lên đĩa trước. */
-  /* 8 màu: hai hàng bốn đĩa, không chồng nhau để tên màu có đủ chỗ */
+  /* Bảng màu nằm trong tấm giấy ren: 8 màu = hai hàng bốn đĩa, mọi kích
+     thước theo bề ngang tấm giấy (cqw của .dress-card). */
   .swatch-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.1rem 0.9rem;
-    max-width: 19rem;
-    margin: 0 auto;
+    gap: 2.6cqw 4cqw;
+    width: 100%;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
@@ -708,12 +709,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
+    gap: 1.2cqw;
   }
 
   .swatch-dot {
     display: block;
-    width: 100%;
+    width: 10.5cqw;
     aspect-ratio: 1;
     border-radius: 50%;
     /* Viền vàng mảnh, không đổ bóng — bảng màu phải sạch, phẳng */
@@ -725,13 +726,73 @@
   .swatch-name {
     font-family: var(--font-body);
     font-style: italic;
-    font-size: 0.6875rem;
-    line-height: 1.35;
-    letter-spacing: 0.01em;
+    font-size: max(0.625rem, 2.7cqw);
+    line-height: 1.2;
     color: var(--color-olive-soft);
     text-align: center;
-    text-wrap: balance;
+    white-space: nowrap;
   }
+
+  /* ── Dresscode: giấy ren + giày ── */
+  /* Giày cắt thẳng ở mép dưới: bỏ đệm dưới để chân giày chạm ranh giới */
+  .section--shoes {
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+
+  .dress-card-wrap {
+    position: relative;
+    margin-top: 1.75rem;
+    margin-inline: calc(var(--gutter) * -0.5);
+  }
+
+  .dress-card {
+    position: relative;
+    container-type: inline-size;
+  }
+
+  .dress-card-paper {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 18px rgba(84, 78, 48, 0.16));
+  }
+
+  .dress-card-body {
+    position: absolute;
+    top: 18%;
+    bottom: 18%;
+    left: 15%;
+    right: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3cqw;
+  }
+
+  .dress-card-label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: max(0.625rem, 2.5cqw);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+
+  /* Đôi giày bước tới mép dưới tấm giấy: kéo lên đè viền ren một đoạn,
+     nằm trên giấy. Ảnh lệch phải sẵn (giày chú rể sát mép phải). */
+  .dress-shoes {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 74%;
+    height: auto;
+    margin: -8% 0 0 auto;
+    filter: drop-shadow(0 -4px 10px rgba(84, 78, 48, 0.12));
+  }
+
 
   /* Thiệp ren: bóng bám theo alpha để viền ren trắng nổi trên nền kem */
   .lace-card {
@@ -892,46 +953,119 @@
   }
 
   /* ─────────── 9c. CHƯƠNG TRÌNH ─────────── */
+  /* Mỗi mốc một hàng cao cố định — SVG đường lượn kéo giãn theo đúng khung
+     này (preserveAspectRatio none), nên hàng phải đều nhau thì dấu ✛ mới nằm
+     đúng trên đường. */
+  .agenda-track {
+    --agenda-row: 10.5rem;
+    position: relative;
+  }
+
+  .agenda-path {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .agenda-path path {
+    fill: none;
+    stroke: var(--color-olive-mute);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .agenda-rows {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .agenda-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 2.25rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.75rem;
+    height: var(--agenda-row);
+  }
+
+  .agenda-event {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .agenda-row--left .agenda-event {
+    grid-column: 1;
+    grid-row: 1;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .agenda-row--left .agenda-art {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: start;
+  }
+  .agenda-row--right .agenda-event {
+    grid-column: 3;
+    grid-row: 1;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .agenda-row--right .agenda-art {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .agenda-node {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 50%;
+    background: var(--color-cream);
+  }
+
+  .agenda-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    line-height: 1.12;
+    color: var(--color-olive);
+    text-wrap: balance;
+  }
+
   .agenda-art {
     display: block;
     width: auto;
-    height: 5.25rem;
-    max-width: 7rem;
+    height: 6rem;
+    max-width: 100%;
     object-fit: contain;
   }
 
-  /* Đường lượn nối hai mốc: SVG hai nửa chữ S, dấu ✛ nằm ở khoảng hở giữa */
-  .agenda-link {
+  /* Dải hoa vắt ngang ranh giới hai section */
+  .flower-divider {
     position: relative;
-    display: flex;
-    justify-content: center;
-    padding-block: 0.5rem;
+    z-index: 6;
+    height: 0;
+    pointer-events: none;
   }
 
-  .agenda-curve {
-    display: block;
-    width: 2.5rem;
-    height: 6rem;
-    overflow: visible;
-  }
-
-  .agenda-curve path {
-    fill: none;
-    stroke: var(--color-olive-soft);
-    stroke-width: 1.1;
-    stroke-linecap: round;
-    opacity: 0.8;
-  }
-
-  /* Dấu ✛ đè giữa nét lượn, có quầng giấy để nét lượn "chui" qua sau nó */
-  .agenda-link-cross {
+  .flower-divider-art {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 0;
+    width: min(92%, 34rem);
+    height: auto;
     transform: translate(-50%, -50%);
-    padding: 0.2rem;
-    border-radius: 50%;
-    background: var(--color-cream);
   }
 
   /* ─────────── 9d. NGHỆ SĨ KHÁCH MỜI ─────────── */
@@ -960,6 +1094,23 @@
     object-fit: cover;
     object-position: top;
     mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+  }
+
+  /* Giờ bắt đầu đêm nhạc: viên thuốc viền vàng */
+  .music-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0.55rem 1.25rem;
+    border: 1px solid var(--color-gold);
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-olive);
   }
 
   .artist-name {
@@ -1132,7 +1283,7 @@
     left: 50%;
     top: 4.5%;
     z-index: 3;
-    width: min(16vw, 4.75rem);
+    width: min(12vw, 3.5rem);
     height: auto;
     transform: translateX(-50%);
     pointer-events: none;
@@ -1311,11 +1462,13 @@
     }
 
     /* Đường nối giữa các mốc chương trình vẽ dần theo cuộn */
-    #agenda .agenda-curve path {
-      stroke-dasharray: 120;
-      animation: motion-draw-path linear both;
+    /* Đường lượn "chảy" dần từ trên xuống theo cuộn. Dùng clip-path chứ không
+       dùng stroke-dasharray: nét không co giãn (non-scaling-stroke) làm độ
+       dài nét đứt tính theo pixel màn hình, đường sẽ đứt giữa chừng. */
+    #agenda .agenda-path {
+      animation: motion-reveal-down linear both;
       animation-timeline: view();
-      animation-range: entry 20% cover 45%;
+      animation-range: entry 10% cover 55%;
     }
     #agenda li .cross-mark {
       animation: motion-spin-in linear both;
@@ -1360,9 +1513,9 @@
   from { clip-path: inset(0 100% 0 0); }
   to { clip-path: inset(0 0 0 0); }
 }
-@keyframes motion-draw-path {
-  from { stroke-dashoffset: 120; }
-  to { stroke-dashoffset: 0; }
+@keyframes motion-reveal-down {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
 }
 @keyframes motion-spin-in {
   from { rotate: -90deg; opacity: 0; }

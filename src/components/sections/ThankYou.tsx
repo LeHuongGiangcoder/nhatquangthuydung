@@ -44,8 +44,8 @@ export function ThankYou() {
             alt="Monogram Nhật Quang & Thùy Dung"
             width={MONOGRAM.w}
             height={MONOGRAM.h}
-            sizes="4.5rem"
-            className="block h-auto w-[4.5rem]"
+            sizes="3.25rem"
+            className="block h-auto w-[3.25rem]"
           />
           <p className="date-text date-text--hero">{COUPLE.dateDisplay}</p>
           <p className="eyebrow">{COUPLE.city}</p>

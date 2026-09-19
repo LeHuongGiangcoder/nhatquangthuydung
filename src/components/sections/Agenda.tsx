@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Image from "next/image";
 import { Cross } from "@/components/Cross";
 import { Decor } from "@/components/Decor";
@@ -9,22 +8,21 @@ import { AGENDA } from "@/lib/content";
 import { ART } from "@/lib/layers";
 
 /**
- * Đường nối giữa hai mốc giờ: một nét lượn chữ S thay cho vạch thẳng, dấu ✛
- * nằm giữa. `flip` đảo chiều lượn để các đoạn nối nhau thành dải uốn lượn.
+ * Đường lượn mềm chạy suốt dọc chương trình, đi qua tâm từng mốc giờ. Mỗi
+ * đoạn giữa hai mốc là một cung Bézier phình sang một bên, bên kế tiếp phình
+ * ngược lại; tay nắm hai phía mỗi mốc thẳng hàng nên đường liền mượt không gãy.
+ * Toạ độ theo lưới 100 × (100·số mốc): mỗi mốc chiếm đúng một hàng cao 100.
  */
-function CurvyLink({ flip }: { flip: boolean }) {
-  return (
-    <li className="agenda-link" aria-hidden>
-      <svg
-        viewBox="0 0 40 96"
-        className="agenda-curve"
-        style={flip ? { transform: "scaleX(-1)" } : undefined}
-      >
-        <path d="M20 2 C 40 26, 0 70, 20 94" />
-      </svg>
-      <Cross size="1rem" className="agenda-link-cross opacity-60" />
-    </li>
-  );
+function trackPath(rows: number) {
+  const bulge = (i: number) => (i % 2 === 0 ? 62 : 38);
+  let d = `M50 0 C 50 12, ${100 - bulge(0)} 17, 50 50`;
+  for (let i = 0; i < rows - 1; i++) {
+    const y = 50 + i * 100;
+    d += ` C ${bulge(i)} ${y + 33}, ${bulge(i)} ${y + 67}, 50 ${y + 100}`;
+  }
+  const last = 50 + (rows - 1) * 100;
+  d += ` C ${100 - bulge(rows - 2)} ${last + 33}, 50 ${last + 38}, 50 ${last + 50}`;
+  return d;
 }
 
 export function Agenda() {
@@ -70,34 +68,49 @@ export function Agenda() {
           <Divider />
         </Reveal>
 
-        <ol className="m-0 list-none p-0 text-center">
-          {AGENDA.map((item, i) => (
-            <Fragment key={item.title}>
-              {i > 0 && <CurvyLink flip={i % 2 === 0} />}
+        {/* Mốc giờ so le trái / phải, minh hoạ nằm phía đối diện; đường lượn
+            đi qua dấu ✛ ở cột giữa của từng hàng. */}
+        <div className="agenda-track">
+          <svg
+            className="agenda-path"
+            viewBox={`0 0 100 ${AGENDA.length * 100}`}
+            preserveAspectRatio="none"
+            aria-hidden
+          >
+            <path d={trackPath(AGENDA.length)} />
+          </svg>
 
+          <ol className="agenda-rows">
+            {AGENDA.map((item, i) => (
               <Reveal
+                key={item.title}
                 as="li"
                 delay={Math.min(i + 1, 5) as 1 | 2 | 3 | 4 | 5}
-                className="flex flex-col items-center"
+                className={`agenda-row ${i % 2 ? "agenda-row--right" : "agenda-row--left"}`}
               >
+                <div className="agenda-event">
+                  <p className="date-text--xs">{item.time}</p>
+                  <h3 className="agenda-title">{item.title}</h3>
+                  <p className="body-text body-text--sm">{item.desc}</p>
+                </div>
+
+                <span className="agenda-node" aria-hidden>
+                  <Cross size="0.95rem" />
+                </span>
+
                 <Image
                   src={ART[item.art].src}
                   alt=""
                   aria-hidden
                   width={ART[item.art].w}
                   height={ART[item.art].h}
-                  sizes="6rem"
+                  sizes="7rem"
                   className="agenda-art"
                 />
-                <p className="date-text--xs mt-3">{item.time}</p>
-                <h3 className="display-3 mt-3 !text-[1.5rem]">{item.title}</h3>
-                <p className="body-text body-text--sm mt-2 max-w-[19rem] text-balance">
-                  {item.desc}
-                </p>
               </Reveal>
-            </Fragment>
-          ))}
-        </ol>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );
