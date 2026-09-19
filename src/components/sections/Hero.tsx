@@ -1,0 +1,123 @@
+import Image from "next/image";
+import { Cross } from "@/components/Cross";
+import { Decor } from "@/components/Decor";
+import { Reveal } from "@/components/Reveal";
+import { COUPLE_WALKING, LAYERS } from "@/lib/layers";
+import { COUPLE, HERO, MONOGRAM } from "@/lib/content";
+
+type HeroProps = {
+  /** Tên khách lấy từ link riêng; bỏ trống thì dùng lời chào chung. */
+  guestName?: string;
+};
+
+// Mặc định `{}` để Hero vẫn gọi được không tham số — route /preview/[id] gom
+// các section vào một map `() => ReactNode`, thiếu nó là build TS đứt.
+export function Hero({ guestName }: HeroProps = {}) {
+  return (
+    <section
+      id="hero"
+      className="section section--flush relative flex min-h-[100svh] flex-col overflow-hidden"
+    >
+      {/* Hai góc hoa. Mép trên và mép ngoài của ảnh bị cắt thẳng sẵn, nên neo
+          đúng 0 vào góc section — lệch ra trong là lộ ngay đường cắt. */}
+      <Decor
+        id="hero-corner-left"
+        width="60%"
+        top="0"
+        left="0"
+        priority
+        className="motion-breathe motion-breathe--left"
+      />
+      <Decor
+        id="hero-corner-right"
+        width="60%"
+        top="0"
+        right="0"
+        priority
+        className="motion-breathe motion-breathe--right"
+      />
+
+      {/* Khối chữ — chiếm phần trên, căn giữa khoảng trống còn lại */}
+      <div className="section-inner flex flex-1 flex-col items-center justify-center pt-[14vh] pb-2 text-center">
+        <Reveal className="max-w-[17.5rem]">
+          <p className="guest-line">
+            {HERO.greeting}, {guestName?.trim() || HERO.guest}
+          </p>
+        </Reveal>
+
+        <Reveal delay={1} className="mt-3 max-w-[19rem]">
+          <p className="invite-line">{HERO.invite}</p>
+        </Reveal>
+
+        <Reveal delay={2} className="mt-5 w-full">
+          <Image
+            src={MONOGRAM.src}
+            alt="Monogram Nhật Quang & Thùy Dung"
+            width={MONOGRAM.w}
+            height={MONOGRAM.h}
+            priority
+            sizes="(max-width: 640px) 19vw, 112px"
+            className="mx-auto block h-auto w-[19%] max-w-[7rem]"
+          />
+        </Reveal>
+
+        <Reveal delay={3} className="mt-5">
+          <h1 className="display-1">{COUPLE.groom}</h1>
+        </Reveal>
+
+        <Reveal delay={3} className="my-2">
+          <Cross />
+        </Reveal>
+
+        <Reveal delay={3}>
+          <p className="display-1">{COUPLE.bride}</p>
+        </Reveal>
+
+        <Reveal delay={4} className="mt-5">
+          <p className="date-text date-text--hero">{COUPLE.dateDisplay}</p>
+        </Reveal>
+
+        <Reveal delay={5} className="mt-3">
+          <p className="eyebrow">{COUPLE.city}</p>
+        </Reveal>
+      </div>
+
+      {/* Tranh lễ đường — để nguyên bề cao thật, không cắt. Section vì thế cao
+          hơn một viewport và tranh tràn sang phần cuộn tiếp theo, đúng ý đồ. */}
+      <div className="relative w-full shrink-0">
+        <Decor id="7" width="38%" top="9%" right="4%" front className="motion-float" />
+
+        {/* Tranh và lớp cô dâu chú rể nằm chung một khung đúng tỉ lệ canvas
+            1108x1420, nên toạ độ % của lớp người luôn rơi đúng lối đi trong
+            tranh ở mọi bề ngang màn hình. */}
+        <div className="relative z-[1] [mask-image:linear-gradient(to_bottom,transparent,#000_14%)]">
+          <Image
+            src={LAYERS["6"].src}
+            alt="Minh hoạ lễ đường cưới trong vườn"
+            width={LAYERS["6"].w}
+            height={LAYERS["6"].h}
+            priority
+            sizes="(max-width: 640px) 100vw, 640px"
+            className="block h-auto w-full"
+          />
+
+          <Image
+            src={COUPLE_WALKING.src}
+            alt=""
+            aria-hidden
+            width={COUPLE_WALKING.w}
+            height={COUPLE_WALKING.h}
+            priority
+            sizes="(max-width: 640px) 17vw, 110px"
+            className="motion-stroll absolute h-auto select-none"
+            style={{
+              left: `${COUPLE_WALKING.left * 100}%`,
+              bottom: `${COUPLE_WALKING.bottom * 100}%`,
+              width: `${COUPLE_WALKING.width * 100}%`,
+            }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
