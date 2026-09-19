@@ -18,27 +18,19 @@ export function Hero({ guestName }: HeroProps = {}) {
       id="hero"
       className="section section--flush relative flex min-h-[100svh] flex-col overflow-hidden"
     >
-      {/* Hai góc hoa. Mép trên và mép ngoài của ảnh bị cắt thẳng sẵn, nên neo
-          đúng 0 vào góc section — lệch ra trong là lộ ngay đường cắt. */}
+      {/* Rèm hoa tử đằng trắng treo ngang đỉnh hero: cành chạy suốt bề ngang,
+          chùm hoa rủ xuống. Gió lướt nhẹ theo phương ngang. */}
       <Decor
-        id="hero-corner-left"
-        width="60%"
-        top="0"
-        left="0"
+        id="hero-wisteria"
+        width="104%"
+        top="0.5rem"
+        left="-2%"
         priority
-        className="motion-breathe motion-breathe--left"
-      />
-      <Decor
-        id="hero-corner-right"
-        width="60%"
-        top="0"
-        right="0"
-        priority
-        className="motion-breathe motion-breathe--right"
+        className="motion-breeze motion-breeze--slow"
       />
 
       {/* Khối chữ — chiếm phần trên, căn giữa khoảng trống còn lại */}
-      <div className="section-inner flex flex-1 flex-col items-center justify-center pt-[14vh] pb-2 text-center">
+      <div className="section-inner flex flex-1 flex-col items-center justify-center pt-[calc(min(100vw,40rem)*0.38+var(--space-3))] pb-2 text-center">
         <Reveal className="max-w-[17.5rem]">
           <p className="guest-line">
             {HERO.greeting}, {guestName?.trim() || HERO.guest}

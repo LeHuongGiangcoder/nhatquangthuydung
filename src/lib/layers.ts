@@ -31,9 +31,8 @@ export const ELEMENTS = {
 
   /* Bộ asset dựng bằng scripts/build-hero-time-assets.mjs. */
 
-  /** Hai góc hoa của hero — mép trên và mép ngoài cắt thẳng, đặt sát góc. */
-  "hero-corner-left": { src: "/assets/hero-corner-left.970d9fd1.webp", w: 900, h: 712 },
-  "hero-corner-right": { src: "/assets/hero-corner-right.5fdbea97.webp", w: 900, h: 778 },
+  /** Rèm hoa tử đằng trắng — đỉnh hero (cắt từ design/curtain-plant.png). */
+  "hero-wisteria": { src: "/assets/hero-wisteria.webp", w: 1200, h: 438 },
   /** Ruy băng thắt nơ: dải ngang ở trên, nơ bên phải, đuôi thả dọc mép phải. */
   ribbon: { src: "/assets/ribbon.c81e3f27.webp", w: 1181, h: 1136 },
   /** Cành hoa rum ôm góc: hoa vắt ngang phía trên, thân thả dọc bên trái. */
