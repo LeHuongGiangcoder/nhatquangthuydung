@@ -5,8 +5,8 @@ import { Reveal } from "@/components/Reveal";
 import { ARTISTS } from "@/lib/content";
 
 /**
- * Nghệ sĩ khách mời của đêm nhạc. Ảnh cắt từ design/singers.png, nền trắng
- * đã tách thành trong suốt (giữ bóng đổ), chân ảnh vuốt mờ thay vì cắt ngang.
+ * Nghệ sĩ khách mời của đêm nhạc. Ảnh cắt từ design/singer-cutout.png (nền
+ * trong suốt sẵn), chân ảnh vuốt mờ thay vì cắt ngang.
  */
 export function Artists() {
   return (

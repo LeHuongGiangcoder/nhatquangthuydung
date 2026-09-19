@@ -81,10 +81,10 @@ export const AGENDA = [
   { time: "20:00", title: "Party", desc: "Đêm nhạc", art: "el-champagne-glasses" },
 ] as const;
 
-/** Nghệ sĩ khách mời. Ảnh cắt từ design/singers.png (nền trắng). */
+/** Nghệ sĩ khách mời. Ảnh cắt từ design/singer-cutout.png (nền trong). */
 export const ARTISTS = [
-  { name: "Lê Hiếu", src: "/assets/singer-le-hieu.webp", w: 438, h: 900 },
-  { name: "Quốc Thiên", src: "/assets/singer-quoc-thien.webp", w: 465, h: 900 },
+  { name: "Lê Hiếu", src: "/assets/singer-le-hieu.webp", w: 419, h: 900 },
+  { name: "Quốc Thiên", src: "/assets/singer-quoc-thien.webp", w: 512, h: 900 },
 ];
 
 export const DRESSCODE = {
