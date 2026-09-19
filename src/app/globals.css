@@ -1366,6 +1366,27 @@
     transform: translateY(18px);
   }
 
+  /* Góc hoa hero đung đưa như tán lá trong gió. Hai lớp chuyển động, cả hai
+     đều giữ kín mép cắt thẳng (mép trên + mép ngoài) của ảnh:
+     - skewX neo ở mép trên: hàng trên cùng đứng yên, lá phía dưới lắc ngang,
+       và chỉ lắc RA NGOÀI (góc trái lệch sang trái, góc phải sang phải) — mép
+       ngoài trượt khuất khỏi màn hình chứ không bao giờ hở vào trong;
+     - phóng nhẹ neo đúng góc: ngọn lá phía giữa trang vươn ra rồi thu về.
+     Xoay (rotate) thì không dùng được: xoay chiều nào cũng hở một mép cắt.
+     Ảnh không có transform inline nên animation trên transform an toàn. */
+  .motion-breathe {
+    animation: motion-canopy-left 6s ease-in-out infinite alternate;
+  }
+  .motion-breathe--left {
+    transform-origin: top left;
+  }
+  .motion-breathe--right {
+    transform-origin: top right;
+    animation-name: motion-canopy-right;
+    animation-duration: 7.5s;
+    animation-delay: -3s;
+  }
+
   /* Bồ câu lơ lửng */
   .motion-float {
     animation: motion-float 6s ease-in-out infinite alternate;
@@ -1452,6 +1473,17 @@
   }
 }
 
+/* Gộp skew + scale vào một transform: để `scale` rời đứng chung khung hình với
+   `transform` thì bộ tối ưu CSS lúc build lặng lẽ bỏ mất `scale`. Cả hai phép
+   đều giữ nguyên điểm gốc (góc neo), nên mép cắt vẫn kín. */
+@keyframes motion-canopy-left {
+  from { transform: skewX(0deg) scale(1); }
+  to { transform: skewX(-2.2deg) scale(1.045); }
+}
+@keyframes motion-canopy-right {
+  from { transform: skewX(0deg) scale(1); }
+  to { transform: skewX(2.2deg) scale(1.045); }
+}
 @keyframes motion-float {
   from { translate: 0 0; }
   to { translate: 0 -9px; }
