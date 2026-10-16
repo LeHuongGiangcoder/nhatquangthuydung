@@ -16,7 +16,9 @@ type DecorProps = {
   /** Đưa element lên trên nội dung */
   front?: boolean;
   opacity?: number;
-  priority?: boolean;
+  /** Tải ngay thay vì chờ lazy — dùng cho decor nằm trên màn hình đầu.
+      Next 16 đã bỏ `priority`; ảnh above-the-fold nay dùng loading="eager". */
+  eager?: boolean;
   className?: string;
   style?: CSSProperties;
 };
@@ -36,7 +38,7 @@ export function Decor({
   flip,
   front,
   opacity,
-  priority,
+  eager,
   className = "",
   style,
 }: DecorProps) {
@@ -53,7 +55,7 @@ export function Decor({
       aria-hidden
       width={layer.w}
       height={layer.h}
-      priority={priority}
+      loading={eager ? "eager" : undefined}
       sizes="(max-width: 640px) 100vw, 640px"
       className={`decor ${front ? "decor--front" : ""} ${className}`}
       style={{

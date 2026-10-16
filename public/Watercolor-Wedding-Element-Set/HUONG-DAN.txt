@@ -1,0 +1,20 @@
+BỘ ELEMENT CƯỚI MÀU NƯỚC
+
+23 PNG: 22 element nền trong suốt và 1 background giấy màu nước.
+Các element đã được vẽ lại theo phong cách ảnh lâu đài, sau đó xuất thành từng file riêng. Đây là bộ PNG tách rời để tự sắp xếp, không phải PSD.
+
+01-Garden: lâu đài, sân vườn kèm đài phun nước, cây lớn, dải cây xa, hoa tiền cảnh trái và phải.
+02-Arch: 2 cột riêng, rèm trái và phải, hoa phía trên trái và phải, đèn chùm, bậc thềm, hoa chân cột trái và phải.
+03-Couple-and-Doves: cặp đôi giữ chung một layer và 5 chim riêng.
+04-Background: nền giấy toàn khung, không trong suốt.
+
+GỢI Ý GHÉP CẢNH VƯỜN, TỪ DƯỚI LÊN
+Nền giấy → cây xa → lâu đài → sân vườn và đài phun nước → cây lớn → chim và cặp đôi → hoa tiền cảnh.
+Đặt sân vườn sát chân lâu đài. Cây xa nằm sau kiến trúc; hoa tiền cảnh che nhẹ mép cỏ để nối các lớp tự nhiên.
+
+GỢI Ý GHÉP KHUNG CỔNG, TỪ DƯỚI LÊN
+Nền hoặc cảnh vườn → bậc thềm → hai cột → hai rèm → đèn chùm → hoa trên và hoa chân cột.
+Đặt hai đầu rèm cao gặp nhau ở giữa; hai đầu thấp nằm trên cột. Phần giữa khung để trống cho nội dung hoặc cảnh vườn.
+
+Mỗi PNG được cắt gọn theo element và có lề trong suốt nhỏ. Các file không chung kích thước canvas; hãy chỉnh tỉ lệ và vị trí khi ghép trong Canva, Figma hoặc Photoshop.
+Giữ đúng tỉ lệ ảnh khi resize. Kích thước pixel gốc được giữ nguyên sau khi tách, không nội suy phóng lớn.

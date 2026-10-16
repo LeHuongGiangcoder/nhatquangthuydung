@@ -18,8 +18,9 @@ import { PARTIES } from "@/lib/content";
 export function Party({ guest }: { guest?: RsvpGuest } = {}) {
   return (
     <>
+      {/* Không có dải hoa sau Thời gian & Địa điểm: section đó đã kết bằng
+          tranh lễ đường, thêm dải hoa nữa là hai lớp trang trí chồng nhau. */}
       <TimeVenue party={PARTIES.main} />
-      <FlowerDivider id="flower-divider-a" />
       <Agenda />
       <Artists />
       <FlowerDivider id="flower-divider-b" />

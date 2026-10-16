@@ -1,8 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Cross } from "@/components/Cross";
-import { Decor } from "@/components/Decor";
 import { Reveal } from "@/components/Reveal";
-import { COUPLE_WALKING, LAYERS } from "@/lib/layers";
+import { ART, type ArtId } from "@/lib/layers";
 import { COUPLE, HERO, MONOGRAM } from "@/lib/content";
 
 type HeroProps = {
@@ -10,113 +12,416 @@ type HeroProps = {
   guestName?: string;
 };
 
+type Layer = {
+  id: ArtId;
+  /** Class riêng của lớp — nhịp vào sân khấu và cách rời khung lúc mở thiệp. */
+  cls?: string;
+  style: React.CSSProperties;
+};
+
+/* ───────────────────────────────────────────────────────────────────────────
+   MỘT CẢNH DUY NHẤT, HAI MÀN
+
+   Trước đây intro và hero là hai trang rời, mở thiệp là đổi trang. Giờ chỉ còn
+   một khung hình: camera đẩy tới, lớp khung cổng bay vượt qua ống kính, lớp
+   tiền cảnh hiện lên, vòm hoa đỉnh ở lại làm vòm hoa của hero. Người xem
+   không thấy một trang mới, chỉ thấy mình bước qua cổng vào vườn.
+
+   Mọi toạ độ tính theo .sc-stage — khung tỉ lệ cố định 375x812 — chứ không
+   theo viewport. Neo theo viewport thì trên màn rộng cột phình ngang còn
+   khoảng cách dọc co lại, cả khung cổng vỡ tỉ lệ.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/** Khu vườn — có mặt ở cả hai màn, chỉ trôi xuống và nở ra khi camera tiến tới. */
+const GARDEN: Layer[] = [
+  // Hàng cây xa kéo CAO hơn cả nóc lâu đài: nó là lớp lấp những nêm giấy trắng
+  // còn hở giữa mái nhà, thân cột và vòm hoa. Gốc cây khuất sau lâu đài nên
+  // kéo cao thoải mái.
+  { id: "garden-trees-far", cls: "sc-g1", style: { width: "130%", left: "-15%", bottom: "38.5%" } },
+  { id: "garden-chateau", cls: "sc-g2", style: { width: "100%", left: "0", bottom: "35.5%" } },
+  // Sân vườn phải bắc từ chân lâu đài xuống tới mặt bậc thềm, và mép trên của
+  // nó phải CHỒNG LÊN mép dưới lâu đài. Ảnh lâu đài gốc kết thúc bằng một
+  // đường cắt thẳng (nội dung dừng đột ngột ở 93% chiều cao ảnh) — hụt vài
+  // chục pixel là lộ ngay vạch cắt đó nằm vắt ngang giữa khung. Bản thân lớp
+  // sân vườn lại có 16.5% chiều cao trên cùng trong suốt, nên phải to hơn
+  // tưởng khá nhiều mới với tới.
+  { id: "garden-parterre", cls: "sc-g3", style: { width: "190%", left: "-45%", bottom: "15%" } },
+];
+
+/**
+ * Khung cổng — chỉ có ở màn chào. Lúc mở thiệp cả nhóm này dạt ra khỏi khung
+ * theo hướng camera đi tới, như khi ta bước xuyên qua nó.
+ *
+ * Hai cột kéo cao rời khỏi tỉ lệ gốc (ảnh gốc chỉ cao gấp 3 lần bề ngang, giữ
+ * đúng tỉ lệ thì cột lùn tịt so với màn dọc) và đẩy hẳn ra ngoài mép khung nên
+ * chỉ còn ló một dải thân; đầu trụ khuất sau rèm và vòm hoa.
+ */
+const ARCH: Layer[] = [
+  // Bục vừa tràn ra hai bên vừa phải dâng ĐỦ CAO: lòng đài phun nước của lớp
+  // sân vườn nằm ngay trên mặt bục, bục thấp là nó lộ ra thành một mảng xám
+  // phẳng vắt ngang thảm cỏ.
+  { id: "arch-steps", cls: "sc-steps", style: { width: "152%", left: "-26%", bottom: "-2%" } },
+  {
+    id: "arch-column-left",
+    cls: "sc-column sc-column--l",
+    style: { width: "15%", height: "74%", left: "-5%", bottom: "9%" },
+  },
+  {
+    id: "arch-column-right",
+    cls: "sc-column sc-column--r",
+    style: { width: "15%", height: "74%", right: "-5%", bottom: "9%" },
+  },
+  // Rèm phải to tới mức CHẠM hẳn hai góc trên của màn hình. Vừa đủ trùm đầu
+  // cột thôi thì vẫn còn hai nêm giấy trắng lọt ở hai góc, và mất luôn cảm
+  // giác tấm vải đang treo từ ngoài khung vào.
+  {
+    id: "arch-curtain-left",
+    cls: "sc-curtain sc-curtain--l",
+    style: { width: "88%", left: "-14%", top: "-4%" },
+  },
+  {
+    id: "arch-curtain-right",
+    cls: "sc-curtain sc-curtain--r",
+    style: { width: "88%", right: "-14%", top: "-4%" },
+  },
+  { id: "arch-chandelier", cls: "sc-chandelier", style: { width: "34%", left: "33%", top: "7%" } },
+  { id: "arch-flowers-base-left", cls: "sc-bloom sc-bloom--bl", style: { width: "72%", left: "-20%", bottom: "-9%" } },
+  { id: "arch-flowers-base-right", cls: "sc-bloom sc-bloom--br", style: { width: "72%", right: "-20%", bottom: "-11%" } },
+  // Hai bụi thấp vắt ngang chân khung. Hai bó hoa chân cột chỉ ôm được hai
+  // mép, còn lại giữa là một mảng cỏ với bậc thềm trống trơn — chính mảng
+  // nhạt đó làm chân màn hình trông hụt.
+  // Dùng cụm hoa của bộ vườn lễ cưới chứ không lặp lại bụi hồng trắng: hai
+  // cụm cùng kiểu đặt cạnh nhau trông như một ảnh bị dán hai lần.
+  { id: "cer-front-left", cls: "sc-bloom sc-verge sc-verge--l", style: { width: "66%", left: "-10%", bottom: "-4%" } },
+  { id: "cer-front-right", cls: "sc-bloom sc-verge sc-verge--r", style: { width: "66%", right: "-10%", bottom: "-6%" } },
+];
+
+/**
+ * Vòm hoa đỉnh — lớp DUY NHẤT đi qua được cả hai màn. Ở màn chào nó là đỉnh
+ * cổng, mở xong nó thành hai góc hoa của hero. Giữ nguyên một lớp như vậy thì
+ * mắt có một điểm tựa không đổi suốt cú chuyển, cảnh mới không như trang khác.
+ */
+const CANOPY: Layer[] = [
+  { id: "arch-flowers-top-left", cls: "sc-bloom sc-bloom--tl", style: { width: "66%", left: "-6%", top: "-2%" } },
+  { id: "arch-flowers-top-right", cls: "sc-bloom sc-bloom--tr", style: { width: "66%", right: "-6%", top: "-2%" } },
+];
+
+/**
+ * Tiền cảnh — chỉ hiện ra KHI camera tiến tới, đúng như lúc đi tới gần thì
+ * những gì ở sát mặt đất mới lọt vào khung.
+ *
+ * Thân cây nằm ở mép PHẢI của ảnh (79–93% bề ngang), nên muốn gốc cây đứng sát
+ * mép trái thì phải lùi cả lớp sang trái gần hết bề ngang của nó.
+ */
+const FRONT: Layer[] = [
+  // bottom: 0 — mép dưới của ẢNH trùng đúng mép dưới section. Cho tràn xuống
+  // (bottom âm) thì mép section cắt ngang giữa bụi hoa, đúng cái "crop" cần
+  // tránh; kéo lên thì hở một dải giấy bên dưới.
+  { id: "garden-bloom-left", cls: "sc-fg sc-fg--l", style: { width: "70%", left: "-30%", bottom: "0" } },
+  { id: "garden-bloom-right", cls: "sc-fg sc-fg--r", style: { width: "70%", right: "-30%", bottom: "0" } },
+  // Hai bụi thấp khép kín RÃNH giữa ở sát đáy. Thiếu chúng thì mép dưới
+  // section cắt ngang một dải cỏ phẳng — đúng cái vạch thẳng làm hỏng cảnh.
+  // Nằm thấp hơn hẳn chỗ cặp đôi đứng nên không che mất hai người.
+  { id: "garden-bloom-right", cls: "sc-fg sc-fg--cl", style: { width: "58%", left: "-2%", bottom: "0" } },
+  { id: "garden-bloom-left", cls: "sc-fg sc-fg--cr", style: { width: "58%", right: "-2%", bottom: "0" } },
+];
+
+/**
+ * Đàn bồ câu bay ngang lúc chuyển cảnh. Mỗi con là HAI tấm chồng lên nhau —
+ * cánh giương (dove-2) và cánh cụp (dove-3) — thay nhau hiện bằng
+ * `steps(1)`, nên cánh đập thật chứ không phải một tấm ảnh trượt ngang.
+ */
+const FLOCK = [
+  { cls: "sc-bird--1", style: { width: "15%", left: "-22%", top: "46%" } },
+  { cls: "sc-bird--2", style: { width: "11%", left: "-30%", top: "33%" } },
+  { cls: "sc-bird--3", style: { width: "18%", left: "-16%", top: "58%" } },
+  { cls: "sc-bird--4", style: { width: "9%", left: "-38%", top: "25%" } },
+  { cls: "sc-bird--5", style: { width: "13%", left: "-26%", top: "68%" } },
+];
+/**
+ * Bồ câu lượn ngang tầm mái lâu đài — nền trời của thiệp là giấy kem, bồ câu
+ * trắng thả lên đó thì chìm mất, phải có mái ngói xanh sẫm phía sau mới nổi.
+ */
+const DOVES: Layer[] = [
+  { id: "dove-3", cls: "sc-dove sc-dove--a", style: { width: "12%", left: "6%", top: "39.5%" } },
+  { id: "dove-4", cls: "sc-dove sc-dove--b", style: { width: "15%", left: "62%", top: "38.5%" } },
+  { id: "dove-2", cls: "sc-dove sc-dove--c", style: { width: "10%", left: "40%", top: "34.5%" } },
+];
+
+/** welcome → opening (camera đẩy tới) → open (đã ở trong vườn) */
+type Phase = "welcome" | "opening" | "open";
+
+/** Chữ màn chào tan xong mới bắt đầu đẩy camera. */
+const TEXT_FADE_MS = 620;
+/** Thời lượng cú đẩy camera. */
+const PUSH_MS = 3200;
+
+function Layers({ layers, alt }: { layers: Layer[]; alt?: Record<string, string> }) {
+  return (
+    <>
+      {layers.map((layer) => {
+        const label = alt?.[layer.id];
+        return (
+          <Image
+            key={layer.cls ?? layer.id}
+            src={ART[layer.id].src}
+            alt={label ?? ""}
+            aria-hidden={label ? undefined : true}
+            width={ART[layer.id].w}
+            height={ART[layer.id].h}
+            loading="eager"
+            sizes="(max-width: 640px) 100vw, 640px"
+            className={`sc-layer ${layer.cls ?? ""}`}
+            style={layer.style}
+          />
+        );
+      })}
+    </>
+  );
+}
+
 // Mặc định `{}` để Hero vẫn gọi được không tham số — route /preview/[id] gom
 // các section vào một map `() => ReactNode`, thiếu nó là build TS đứt.
 export function Hero({ guestName }: HeroProps = {}) {
+  const [phase, setPhase] = useState<Phase>("welcome");
+  const [muted, setMuted] = useState(false);
+  const timers = useRef<number[]>([]);
+  const sceneRef = useRef<HTMLElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  /**
+   * Đo sẵn chỗ monogram sẽ đáp xuống trong thiệp, rồi ghi vào biến CSS cho
+   * chuỗi bay dùng. Tính bằng số đo thật chứ không phỏng chừng bằng %, vì
+   * chỗ đứng của nó phụ thuộc chiều cao từng dòng chữ phía trên — đoán sai
+   * vài pixel là thấy monogram "nhảy" một cái lúc chữ hiện ra.
+   */
+  useLayoutEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+
+    const measure = () => {
+      const slot = scene.querySelector<HTMLElement>(".sc-card-mono");
+      const flyer = scene.querySelector<HTMLElement>(".sc-morph-mono");
+      const camera = scene.querySelector<HTMLElement>(".sc-camera");
+      if (!slot || !flyer || !camera) return;
+      // offsetWidth chứ không phải getBoundingClientRect: rect đã dính
+      // transform, mà lúc đo thì monogram bay đang ở scale 0.5 — lấy rect ra
+      // tỉ lệ 1.0 và nó đáp xuống to bằng cả khối tên.
+      if (!slot.offsetWidth || !flyer.offsetWidth) return;
+
+      const s = scene.getBoundingClientRect();
+      const t = slot.getBoundingClientRect();
+      // Điểm xuất phát là tâm KHUNG CAMERA (một màn hình), không phải tâm
+      // section — section cao hơn màn hình nên hai tâm đó lệch nhau.
+      const originY = s.top + camera.getBoundingClientRect().height / 2;
+
+      scene.style.setProperty("--mono-dx", `${Math.round(t.left + t.width / 2 - (s.left + s.width / 2))}px`);
+      scene.style.setProperty("--mono-dy", `${Math.round(t.top + t.height / 2 - originY)}px`);
+      scene.style.setProperty("--mono-scale", (slot.offsetWidth / flyer.offsetWidth).toFixed(3));
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(scene);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.add("intro-locked");
+    const pending = timers.current;
+    return () => {
+      document.body.classList.remove("intro-locked");
+      pending.forEach(window.clearTimeout);
+    };
+  }, []);
+
+  const open = useCallback(() => {
+    // Nhạc phải phát NGAY trong handler của cú bấm. Đẩy xuống setTimeout là
+    // trình duyệt không còn coi là do người dùng khởi động và chặn luôn.
+    audioRef.current?.play().catch(() => {
+      /* Vài máy vẫn chặn (chế độ tiết kiệm pin, cài đặt riêng) — thiệp cứ mở
+         bình thường, chỉ là không có nhạc. */
+    });
+
+    setPhase((current) => {
+      if (current !== "welcome") return current;
+      timers.current.push(
+        window.setTimeout(() => {
+          setPhase("open");
+          document.body.classList.remove("intro-locked");
+        }, TEXT_FADE_MS + PUSH_MS),
+      );
+      return "opening";
+    });
+  }, []);
+
+  const open3 = phase === "open";
+
   return (
-    <section
-      id="hero"
-      className="section section--flush relative flex min-h-[100svh] flex-col overflow-hidden"
-    >
-      {/* Hai góc hoa. Mép trên và mép ngoài của ảnh bị cắt thẳng sẵn, nên neo
-          đúng 0 vào góc section — lệch ra trong là lộ ngay đường cắt. */}
-      <Decor
-        id="hero-corner-left"
-        width="60%"
-        top="0"
-        left="0"
-        priority
-        className="motion-breathe motion-breathe--left"
-      />
-      <Decor
-        id="hero-corner-right"
-        width="60%"
-        top="0"
-        right="0"
-        priority
-        className="motion-breathe motion-breathe--right"
+    <section id="hero" ref={sceneRef} className="sc" data-phase={phase}>
+      <audio ref={audioRef} src="/golden-hour.mp4" loop preload="auto" />
+      {/* Camera: cú đẩy tới nằm ở ĐÂY, một transform duy nhất cho cả cảnh.
+          Từng nhóm lớp bên trong còn chuyển động riêng của nó. */}
+      <div className="sc-camera">
+        <div className="sc-stage">
+          <div className="sc-garden">
+            <Layers
+              layers={GARDEN}
+              alt={{ "garden-chateau": "Khu vườn lâu đài của tiệc cưới" }}
+            />
+            <Layers layers={DOVES} />
+          </div>
+
+          <Layers layers={ARCH} />
+          <Layers layers={CANOPY} />
+        </div>
+      </div>
+
+      {/* Đàn bồ câu bay ngang màn hình đúng lúc camera đi xuyên qua cổng */}
+      <div className="sc-flock" aria-hidden>
+        {FLOCK.map((bird) => (
+          <span key={bird.cls} className={`sc-bird ${bird.cls}`} style={bird.style}>
+            <Image
+              src={ART["dove-2"].src}
+              alt=""
+              width={ART["dove-2"].w}
+              height={ART["dove-2"].h}
+              sizes="(max-width: 640px) 18vw, 115px"
+              className="sc-bird-up"
+            />
+            <Image
+              src={ART["dove-3"].src}
+              alt=""
+              width={ART["dove-3"].w}
+              height={ART["dove-3"].h}
+              sizes="(max-width: 640px) 18vw, 115px"
+              className="sc-bird-down"
+            />
+          </span>
+        ))}
+      </div>
+
+      {/* Tiền cảnh neo theo ĐÁY SECTION chứ không theo khung camera. Section
+          cao hơn màn hình một quãng để cảnh vườn còn chỗ kết thúc đàng hoàng
+          — bãi cỏ, đài phun nước rồi mới tới bụi hoa tràn qua mép dưới. Neo
+          theo camera thì tiền cảnh dính ở mốc 100svh, bỏ trống cả khoảng
+          dưới và mép section lại cắt ngang giữa toà nhà. */}
+      <div className="sc-front-band" aria-hidden>
+        <Layers layers={FRONT} />
+        <Image
+          src={ART["garden-couple"].src}
+          alt=""
+          aria-hidden
+          width={ART["garden-couple"].w}
+          height={ART["garden-couple"].h}
+          sizes="(max-width: 640px) 12vw, 78px"
+          className="sc-layer sc-couple"
+        />
+      </div>
+
+      {/* ── Màn 1: lời chào ── */}
+      <div className="sc-welcome" aria-hidden={phase !== "welcome"}>
+        <div className="sc-plate">
+          {/* Nét chỉ chạy một vòng quanh khối chữ rồi khép lại */}
+          <svg className="sc-plate-line" viewBox="0 0 320 210" preserveAspectRatio="none" aria-hidden>
+            {/* Bốn góc cong LÕM vào (sweep 0) cho ra dáng khung vòm của thiệp
+                cổ, không phải một ô chữ nhật bo tròn. */}
+            <path
+              pathLength="100"
+              d="M 20 2 H 300 A 18 18 0 0 0 318 20 V 190 A 18 18 0 0 0 300 208 H 20 A 18 18 0 0 0 2 190 V 20 A 18 18 0 0 0 20 2 Z"
+            />
+          </svg>
+          <p className="eyebrow sc-welcome-eyebrow">Chào mừng đến đám cưới của</p>
+          <p className="display-1 sc-welcome-name">{COUPLE.groom}</p>
+          <Cross />
+          <p className="display-1 sc-welcome-name">{COUPLE.bride}</p>
+        </div>
+
+        <button type="button" className="glass-btn sc-open-btn" onClick={open}>
+          Mở thiệp
+        </button>
+      </div>
+
+      {/* Monogram bắc cầu hai màn: hiện lên đúng tâm khối chữ màn chào, bay
+          lên và ĐỨNG LẠI đúng chỗ của nó trong thiệp — nó chính là monogram
+          của thiệp, không biến mất rồi cho một cái khác hiện ra. Các dòng chữ
+          còn lại mới xuất hiện sau khi nó đáp xong. */}
+      <Image
+        src={MONOGRAM.src}
+        alt="Monogram Nhật Quang & Thùy Dung"
+        width={MONOGRAM.w}
+        height={MONOGRAM.h}
+        loading="eager"
+        sizes="7.5rem"
+        className="sc-morph-mono"
       />
 
-      {/* Khối chữ — chiếm phần trên, căn giữa khoảng trống còn lại */}
-      <div className="section-inner flex flex-1 flex-col items-center justify-center pt-[14vh] pb-2 text-center">
-        <Reveal className="max-w-[17.5rem]">
+      {/* Nút tắt/bật nhạc — chỉ hiện sau khi thiệp đã mở. Nhạc tự phát mà
+          không có chỗ tắt thì khách đang ở chỗ đông người không xoay xở được. */}
+      {open3 ? (
+        <button
+          type="button"
+          className="sc-mute"
+          aria-pressed={muted}
+          onClick={() => {
+            const el = audioRef.current;
+            if (!el) return;
+            el.muted = !el.muted;
+            setMuted(el.muted);
+          }}
+        >
+          <span className="sr-only">{muted ? "Bật nhạc" : "Tắt nhạc"}</span>
+          <span aria-hidden>{muted ? "♪̸" : "♪"}</span>
+        </button>
+      ) : null}
+
+      {/* ── Màn 2: thiệp ── */}
+      <div className="sc-card" aria-hidden={!open3}>
+        {/* Chỗ trống giữ đúng kích thước monogram. Monogram thật là con bay
+            từ màn chào tới và ĐỨNG LẠI ở đây — nên ô này luôn trong suốt,
+            chỉ có nhiệm vụ chiếm chỗ cho các dòng chữ bên dưới. Nó đứng đầu
+            khối chữ, trên cả lời chào. */}
+        <div className="w-full">
+          <Image
+            src={MONOGRAM.src}
+            alt=""
+            aria-hidden
+            width={MONOGRAM.w}
+            height={MONOGRAM.h}
+            sizes="(max-width: 640px) 13vw, 80px"
+            className="sc-card-mono mx-auto block h-auto w-[13%] max-w-[4.75rem]"
+          />
+        </div>
+
+        <Reveal className="mt-[var(--space-3)] max-w-[17.5rem]" when={open3}>
           <p className="guest-line">
             {HERO.greeting}, {guestName?.trim() || HERO.guest}
           </p>
         </Reveal>
 
-        <Reveal delay={1} className="mt-3 max-w-[19rem]">
+        <Reveal delay={1} className="mt-3 max-w-[19rem]" when={open3}>
           <p className="invite-line">{HERO.invite}</p>
         </Reveal>
 
-        <Reveal delay={2} className="mt-[var(--space-3)] w-full">
-          <Image
-            src={MONOGRAM.src}
-            alt="Monogram Nhật Quang & Thùy Dung"
-            width={MONOGRAM.w}
-            height={MONOGRAM.h}
-            priority
-            sizes="(max-width: 640px) 13vw, 80px"
-            className="mx-auto block h-auto w-[13%] max-w-[4.75rem]"
-          />
+        <Reveal delay={3} className="mt-[var(--space-4)]" when={open3}>
+          <h1 className="display-1 display-1--shine">{COUPLE.groom}</h1>
         </Reveal>
 
-        <Reveal delay={3} className="mt-[var(--space-4)]">
-          <h1 className="display-1">{COUPLE.groom}</h1>
-        </Reveal>
-
-        <Reveal delay={3} className="my-2">
+        <Reveal delay={3} className="my-2" when={open3}>
           <Cross />
         </Reveal>
 
-        <Reveal delay={3}>
-          <p className="display-1">{COUPLE.bride}</p>
+        <Reveal delay={3} when={open3}>
+          <p className="display-1 display-1--shine display-1--shine-late">{COUPLE.bride}</p>
         </Reveal>
 
-        <Reveal delay={4} className="mt-5">
+        <Reveal delay={4} className="mt-5" when={open3}>
           <p className="date-text date-text--hero">{COUPLE.dateDisplay}</p>
         </Reveal>
 
-        <Reveal delay={5} className="mt-3">
+        <Reveal delay={5} className="mt-3" when={open3}>
           <p className="eyebrow">{COUPLE.city}</p>
         </Reveal>
-      </div>
-
-      {/* Tranh lễ đường — để nguyên bề cao thật, không cắt. Section vì thế cao
-          hơn một viewport và tranh tràn sang phần cuộn tiếp theo, đúng ý đồ. */}
-      <div className="relative w-full shrink-0">
-        <Decor id="7" width="38%" top="9%" right="4%" front className="motion-float" />
-
-        {/* Tranh và lớp cô dâu chú rể nằm chung một khung đúng tỉ lệ canvas
-            1108x1420, nên toạ độ % của lớp người luôn rơi đúng lối đi trong
-            tranh ở mọi bề ngang màn hình. */}
-        <div className="relative z-[1] [mask-image:linear-gradient(to_bottom,transparent,#000_14%)]">
-          <Image
-            src={LAYERS["6"].src}
-            alt="Minh hoạ lễ đường cưới trong vườn"
-            width={LAYERS["6"].w}
-            height={LAYERS["6"].h}
-            priority
-            sizes="(max-width: 640px) 100vw, 640px"
-            className="block h-auto w-full"
-          />
-
-          <Image
-            src={COUPLE_WALKING.src}
-            alt=""
-            aria-hidden
-            width={COUPLE_WALKING.w}
-            height={COUPLE_WALKING.h}
-            priority
-            sizes="(max-width: 640px) 17vw, 110px"
-            className="motion-stroll absolute h-auto select-none"
-            style={{
-              left: `${COUPLE_WALKING.left * 100}%`,
-              bottom: `${COUPLE_WALKING.bottom * 100}%`,
-              width: `${COUPLE_WALKING.width * 100}%`,
-            }}
-          />
-        </div>
       </div>
     </section>
   );

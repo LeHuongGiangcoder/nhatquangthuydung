@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Intro } from "@/components/Intro";
 import { Hero } from "@/components/sections/Hero";
 import { Party } from "@/components/sections/Party";
 import { ThankYou } from "@/components/sections/ThankYou";
@@ -47,7 +46,6 @@ export default async function GuestInvitation({
 
   return (
     <>
-      <Intro />
       <main>
         <Hero guestName={guest?.name} />
         {/* Slug lấy từ đường dẫn kể cả khi chưa tra được Sheet: Apps Script

@@ -14,6 +14,12 @@ type RevealProps = {
   delay?: 1 | 2 | 3 | 4 | 5;
   as?: ElementType;
   className?: string;
+  /**
+   * Cổng chặn: để `false` thì giữ nguyên trạng thái ẩn dù đã lọt vào khung
+   * nhìn. Dùng cho khối chữ của thiệp — nó nằm sẵn trong DOM suốt màn chào
+   * nên observer báo "đã thấy" ngay, chữ sẽ hiện trước cả lúc mở cổng.
+   */
+  when?: boolean;
 };
 
 /** Bọc nội dung để fade-up khi cuộn tới. Style nằm trong globals.css (.reveal). */
@@ -22,6 +28,7 @@ export function Reveal({
   delay,
   as: Tag = "div",
   className = "",
+  when = true,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   // Trạng thái "đã hiện" nằm trong React chứ không gắn class thẳng vào DOM.
@@ -32,7 +39,7 @@ export function Reveal({
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || visible) return;
+    if (!el || visible || !when) return;
 
     let reported = false;
     const io = new IntersectionObserver(
@@ -61,7 +68,7 @@ export function Reveal({
       window.clearTimeout(fallback);
       io.disconnect();
     };
-  }, [visible]);
+  }, [visible, when]);
 
   return (
     <Tag

@@ -1,0 +1,114 @@
+{
+  "cer-cypress": {
+    "src": "/assets/cer-cypress.webp",
+    "w": 555,
+    "h": 554,
+    "left": 0.22292,
+    "top": 0.22606,
+    "width": 0.55505
+  },
+  "cer-tree-left": {
+    "src": "/assets/cer-tree-left.webp",
+    "w": 202,
+    "h": 288,
+    "left": 0.01895,
+    "top": 0.42254,
+    "width": 0.20217
+  },
+  "cer-tree-right": {
+    "src": "/assets/cer-tree-right.webp",
+    "w": 197,
+    "h": 287,
+    "left": 0.78069,
+    "top": 0.41972,
+    "width": 0.19675
+  },
+  "cer-fence": {
+    "src": "/assets/cer-fence.webp",
+    "w": 815,
+    "h": 180,
+    "left": 0.09116,
+    "top": 0.58099,
+    "width": 0.81498
+  },
+  "cer-lawn": {
+    "src": "/assets/cer-lawn.webp",
+    "w": 829,
+    "h": 616,
+    "left": 0.08484,
+    "top": 0.4838,
+    "width": 0.82852
+  },
+  "cer-gazebo": {
+    "src": "/assets/cer-gazebo.webp",
+    "w": 283,
+    "h": 470,
+    "left": 0.3574,
+    "top": 0.31056,
+    "width": 0.28339
+  },
+  "cer-urns": {
+    "src": "/assets/cer-urns.webp",
+    "w": 477,
+    "h": 126,
+    "left": 0.26264,
+    "top": 0.56479,
+    "width": 0.47653
+  },
+  "cer-chairs": {
+    "src": "/assets/cer-chairs.webp",
+    "w": 973,
+    "h": 264,
+    "left": 0.01264,
+    "top": 0.67958,
+    "width": 0.97292
+  },
+  "cer-rear-left": {
+    "src": "/assets/cer-rear-left.webp",
+    "w": 117,
+    "h": 118,
+    "left": 0.3204,
+    "top": 0.64789,
+    "width": 0.11733
+  },
+  "cer-rear-right": {
+    "src": "/assets/cer-rear-right.webp",
+    "w": 122,
+    "h": 112,
+    "left": 0.55957,
+    "top": 0.6507,
+    "width": 0.12184
+  },
+  "cer-mid-left": {
+    "src": "/assets/cer-mid-left.webp",
+    "w": 170,
+    "h": 149,
+    "left": 0.24729,
+    "top": 0.73803,
+    "width": 0.16968
+  },
+  "cer-mid-right": {
+    "src": "/assets/cer-mid-right.webp",
+    "w": 172,
+    "h": 149,
+    "left": 0.57942,
+    "top": 0.73803,
+    "width": 0.17238
+  },
+  "cer-front-left": {
+    "src": "/assets/cer-front-left.webp",
+    "w": 289,
+    "h": 203,
+    "left": 0.09838,
+    "top": 0.8331,
+    "width": 0.28881
+  },
+  "cer-front-right": {
+    "src": "/assets/cer-front-right.webp",
+    "w": 276,
+    "h": 200,
+    "left": 0.61733,
+    "top": 0.83521,
+    "width": 0.27617
+  }
+}

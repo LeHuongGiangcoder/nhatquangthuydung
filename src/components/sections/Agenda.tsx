@@ -30,10 +30,19 @@ export function Agenda() {
       id="agenda"
       className="section section--dense section--after-divider section--bleed relative z-[3] pb-[16rem]"
     >
-      {/* Bên trái cột rèm, bên phải tượng Aphrodite — cả hai đứng sau dải cẩm
-          tú cầu ở gấu, thứ tự DOM quyết định lớp trên vì mọi .decor đều z-0. */}
+      {/* Hai cột rèm hai bên, đứng sau dải cẩm tú cầu ở gấu — thứ tự DOM quyết
+          định lớp trên vì mọi .decor đều z-0.
+          Cột phải to hơn và LẬT GƯƠNG: cùng một ảnh đặt đối xứng y hệt thì
+          nhìn ra ngay là bản sao, mà lệch cỡ một nhịp thì bố cục mới có
+          trọng tâm thay vì cân đối cứng.
+
+          Trong ảnh gốc, THÂN CỘT nằm ở mép phải còn đám lá ở mép trái. Lật
+          gương xong thì CỤM HOA về bên trái của lớp (0–28% bề ngang ảnh) và
+          thân cột ở 15–38%, nên phải đẩy lớp ra tận -55%: mép trái của lớp
+          rơi vào 83% bề ngang màn hình, qua khỏi chữ "Party" kết thúc ở 80%.
+          Để gần hơn là cụm hoa chìa vào che mất chữ. */}
       <Decor id="el-43" width="46%" bottom="9%" left="-23%" />
-      <Decor id="el-statue" width="25%" bottom="11%" right="-4%" />
+      <Decor id="el-43" width="72%" bottom="7%" right="-55%" flip />
 
       {/* Gấu section: dải cẩm tú cầu vuốt mờ chân vào nền giấy, ruy băng vắt
           ngang che đúng vùng vuốt đó. Đuôi ruy băng thả xuống section kế

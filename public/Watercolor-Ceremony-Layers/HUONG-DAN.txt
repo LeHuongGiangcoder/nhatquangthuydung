@@ -1,0 +1,15 @@
+BỘ LAYER VƯỜN LỄ CƯỚI MÀU NƯỚC
+
+Phong cách đồng bộ với bộ lâu đài trước: nét vẽ chi tiết, màu nước nhẹ, ivory và sage/olive; giữ các điểm hoa blush và xanh pastel của ảnh tham chiếu.
+
+01-Separate-Elements: 17 PNG element tách rời, cắt gọn, nền trong suốt, giữ kích thước pixel gốc sau khi tách.
+Gồm nhà vòm có dây hoa leo; nhóm cây bách; cây lá sáng trái/phải; hàng rào trái/phải; mặt cỏ và lối đi; dãy ghế trái/phải; bình hoa và bệ trái/phải; 6 cụm hoa (tiền cảnh, giữa và cuối lối đi, mỗi bên một cụm).
+
+02-Aligned-Layers-1108x1420: 18 PNG cùng kích thước 1108 × 1420 px, gồm 17 element đã đặt sẵn vị trí và 1 nền giấy. Đây là bố cục ghép gợi ý từ chính các element, không phải tái dựng chính xác từng pixel ảnh gốc. Các file này có thể đã được thu nhỏ từ PNG rời để phù hợp cảnh.
+
+CÁCH DÙNG LAYER CÙNG CANVAS
+Tạo frame 1108 × 1420 px. Đặt mọi PNG cùng canvas tại cùng vị trí (x=0, y=0), cùng kích thước. Xếp từ dưới lên theo số file tăng dần: 00 nằm dưới cùng, 17 ở trên cùng. Giữ nền giấy 00 riêng để thay đổi nền khi cần. Không crop bỏ khoảng trong suốt của các file trong thư mục này.
+
+ASSEMBLED-PREVIEW.jpg là ảnh xem bố cục ghép sẵn. ELEMENT-OVERVIEW.jpg là ảnh tổng quan 17 element.
+
+Khi cần tự bố cục hoặc phóng lớn một thành phần, dùng PNG trong 01-Separate-Elements. Các phần bị che trong ảnh gốc đã được vẽ bù; chi tiết có thể khác nhẹ so với ảnh gốc.

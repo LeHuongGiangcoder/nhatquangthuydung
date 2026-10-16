@@ -75,6 +75,90 @@ export const ELEMENTS = {
   /** Trăng khuyết và sao bốn cánh mạ vàng — trang trí Đêm nhạc. */
   moon: { src: "/assets/moon.webp", w: 700, h: 688 },
   star: { src: "/assets/star.webp", w: 547, h: 700 },
+
+  /* Bộ element tách lớp — dựng bằng scripts/build-scene-layers.mjs từ
+     public/Watercolor-Wedding-Element-Set. Bản gốc xanh đậm hơn tranh của
+     site nhiều, script đã hạ tông sẵn; đừng dùng thẳng file PNG gốc. */
+
+  /* Cảnh vườn của hero, xếp từ xa ra gần đúng thứ tự trong HUONG-DAN.txt:
+     cây xa → lâu đài → sân vườn & đài phun nước → cây lớn → cặp đôi →
+     hoa tiền cảnh. */
+  "garden-trees-far": { src: "/assets/garden-trees-far.webp", w: 600, h: 353 },
+  "garden-chateau": { src: "/assets/garden-chateau.webp", w: 564, h: 450 },
+  "garden-parterre": { src: "/assets/garden-parterre.webp", w: 723, h: 236 },
+  "garden-tree": { src: "/assets/garden-tree.webp", w: 499, h: 611 },
+  "garden-couple": { src: "/assets/garden-couple.webp", w: 459, h: 637 },
+  "garden-bloom-left": { src: "/assets/garden-bloom-left.webp", w: 511, h: 437 },
+  "garden-bloom-right": { src: "/assets/garden-bloom-right.webp", w: 515, h: 451 },
+
+  /* Khung cổng của intro, xếp từ dưới lên: bậc thềm → hai cột → hai rèm →
+     đèn chùm → hoa góc trên & hoa chân cột. */
+  "arch-steps": { src: "/assets/arch-steps.webp", w: 656, h: 221 },
+  "arch-column-left": { src: "/assets/arch-column-left.webp", w: 179, h: 534 },
+  "arch-column-right": { src: "/assets/arch-column-right.webp", w: 179, h: 534 },
+  "arch-curtain-left": { src: "/assets/arch-curtain-left.webp", w: 351, h: 538 },
+  "arch-curtain-right": { src: "/assets/arch-curtain-right.webp", w: 344, h: 540 },
+  "arch-chandelier": { src: "/assets/arch-chandelier.webp", w: 303, h: 442 },
+  "arch-flowers-top-left": { src: "/assets/arch-flowers-top-left.webp", w: 457, h: 549 },
+  "arch-flowers-top-right": { src: "/assets/arch-flowers-top-right.webp", w: 471, h: 544 },
+  "arch-flowers-base-left": { src: "/assets/arch-flowers-base-left.webp", w: 351, h: 354 },
+  "arch-flowers-base-right": { src: "/assets/arch-flowers-base-right.webp", w: 345, h: 357 },
+
+
+  /* Vườn lễ cưới — dựng bằng scripts/build-ceremony-layers.mjs từ
+     public/Watercolor-Ceremony-Layers. Khác bộ lâu đài: 14 lớp này đã căn
+     sẵn trên cùng một canvas 1108x1420, nên mỗi lớp kèm luôn toạ độ của nó
+     trong CEREMONY bên dưới — cứ xếp đúng toạ độ đó là khít.
+     Thứ tự chồng: cây bách → hai cây lá → hàng rào → cỏ & lối đi → nhà vòm
+     → bình hoa → ghế → hoa cuối lối → hoa giữa lối → hoa tiền cảnh. */
+  "cer-cypress": { src: "/assets/cer-cypress.webp", w: 555, h: 554 },
+  "cer-tree-left": { src: "/assets/cer-tree-left.webp", w: 202, h: 288 },
+  "cer-tree-right": { src: "/assets/cer-tree-right.webp", w: 197, h: 287 },
+  "cer-fence": { src: "/assets/cer-fence.webp", w: 815, h: 180 },
+  "cer-lawn": { src: "/assets/cer-lawn.webp", w: 829, h: 616 },
+  "cer-gazebo": { src: "/assets/cer-gazebo.webp", w: 283, h: 470 },
+  "cer-urns": { src: "/assets/cer-urns.webp", w: 477, h: 126 },
+  "cer-chairs": { src: "/assets/cer-chairs.webp", w: 973, h: 264 },
+  "cer-rear-left": { src: "/assets/cer-rear-left.webp", w: 117, h: 118 },
+  "cer-rear-right": { src: "/assets/cer-rear-right.webp", w: 122, h: 112 },
+  "cer-mid-left": { src: "/assets/cer-mid-left.webp", w: 170, h: 149 },
+  "cer-mid-right": { src: "/assets/cer-mid-right.webp", w: 172, h: 149 },
+  "cer-front-left": { src: "/assets/cer-front-left.webp", w: 289, h: 203 },
+  "cer-front-right": { src: "/assets/cer-front-right.webp", w: 276, h: 200 },
+
+  /* Cảm ơn: cặp đôi và hai chiếc ô tách rời, để ô xoay được quanh tâm nó mà
+     người đứng yên. Bản gộp cũ (el-umbrellas) không làm được việc đó. */
+  "thanks-couple": { src: "/assets/thanks-couple.webp", w: 760, h: 1466 },
+  "thanks-parasol-mr": { src: "/assets/thanks-parasol-mr.webp", w: 620, h: 615 },
+  "thanks-parasol-mrs": { src: "/assets/thanks-parasol-mrs.webp", w: 620, h: 618 },
+
+  /** Bồ câu rời, mỗi con một đường bay. `7.webp` vẫn là đàn ở xa. */
+  "dove-1": { src: "/assets/dove-1.webp", w: 420, h: 414 },
+  "dove-2": { src: "/assets/dove-2.webp", w: 420, h: 406 },
+  "dove-3": { src: "/assets/dove-3.webp", w: 420, h: 233 },
+  "dove-4": { src: "/assets/dove-4.webp", w: 420, h: 442 },
+} as const;
+
+
+/**
+ * Toạ độ từng lớp vườn lễ cưới trên canvas gốc 1108x1420, tính theo phần
+ * trăm. Do scripts/build-ceremony-layers.mjs ghi ra — đừng sửa tay.
+ */
+export const CEREMONY = {
+  "cer-cypress": { left: 0.22292, top: 0.22606, width: 0.55505 },
+  "cer-tree-left": { left: 0.01895, top: 0.42254, width: 0.20217 },
+  "cer-tree-right": { left: 0.78069, top: 0.41972, width: 0.19675 },
+  "cer-fence": { left: 0.09116, top: 0.58099, width: 0.81498 },
+  "cer-lawn": { left: 0.08484, top: 0.4838, width: 0.82852 },
+  "cer-gazebo": { left: 0.3574, top: 0.31056, width: 0.28339 },
+  "cer-urns": { left: 0.26264, top: 0.56479, width: 0.47653 },
+  "cer-chairs": { left: 0.01264, top: 0.67958, width: 0.97292 },
+  "cer-rear-left": { left: 0.3204, top: 0.64789, width: 0.11733 },
+  "cer-rear-right": { left: 0.55957, top: 0.6507, width: 0.12184 },
+  "cer-mid-left": { left: 0.24729, top: 0.73803, width: 0.16968 },
+  "cer-mid-right": { left: 0.57942, top: 0.73803, width: 0.17238 },
+  "cer-front-left": { left: 0.09838, top: 0.8331, width: 0.28881 },
+  "cer-front-right": { left: 0.61733, top: 0.83521, width: 0.27617 },
 } as const;
 
 /** Mọi hình Decor có thể dùng — LAYERS chỉ khác ở chỗ có thêm toạ độ canvas. */

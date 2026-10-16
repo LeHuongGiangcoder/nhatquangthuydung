@@ -1,81 +1,111 @@
 import Image from "next/image";
-import { Decor } from "@/components/Decor";
 import { Divider } from "@/components/Divider";
 import { HeadArt } from "@/components/HeadArt";
 import { Reveal } from "@/components/Reveal";
-import { ART } from "@/lib/layers";
+import { ART, CEREMONY, type ArtId } from "@/lib/layers";
 import { COUPLE, PARTIES, type Party } from "@/lib/content";
 
 /**
- * Thời gian & Địa điểm — "thẻ tên trên bàn tiệc": đĩa bạc kèm dao nĩa, tấm
- * thẻ giấy ở giữa in ngày và nơi tổ chức, dấu sáp vàng gắn góc phải thẻ, bó
- * hoa mộc lan đặt chéo góc dưới trái.
+ * Cảnh vườn lễ cưới, xếp từ xa ra gần đúng thứ tự trong HUONG-DAN.txt của bộ
+ * element: cây bách → hai cây lá → hàng rào → cỏ & lối đi → nhà vòm → bình
+ * hoa → ghế → hoa cuối lối → hoa giữa lối → hoa tiền cảnh.
  *
- * Khung đĩa rộng hơn cột nội dung một chút (dao nĩa được phép tràn ra lề) để
- * tấm thẻ đủ rộng cho chữ. Toạ độ thẻ đo trên el-plate.webp: 18–80% ngang,
- * 30–75% dọc. Cỡ chữ tính theo bề ngang khung (cqw) nên chữ luôn nằm gọn
- * trong thẻ ở mọi màn hình.
+ * Toạ độ KHÔNG đặt tay: 14 lớp này vốn nằm trên cùng một canvas 1108x1420,
+ * script dựng asset đã ghi lại vị trí từng lớp vào CEREMONY. Ở đây chỉ việc
+ * đọc ra, nên cảnh ghép lại khít đúng bản gốc ở mọi bề ngang.
+ */
+const SCENE: { id: ArtId; cls?: string }[] = [
+  { id: "cer-cypress" },
+  { id: "cer-tree-left", cls: "cer-sway cer-sway--l" },
+  { id: "cer-tree-right", cls: "cer-sway cer-sway--r" },
+  { id: "cer-fence" },
+  { id: "cer-lawn" },
+  { id: "cer-gazebo" },
+  { id: "cer-urns" },
+  { id: "cer-chairs" },
+  { id: "cer-rear-left", cls: "cer-bloom cer-bloom--1" },
+  { id: "cer-rear-right", cls: "cer-bloom cer-bloom--2" },
+  { id: "cer-mid-left", cls: "cer-bloom cer-bloom--3" },
+  { id: "cer-mid-right", cls: "cer-bloom cer-bloom--4" },
+  { id: "cer-front-left", cls: "cer-bloom cer-bloom--5" },
+  { id: "cer-front-right", cls: "cer-bloom cer-bloom--6" },
+];
+
+/**
+ * Thời gian & Địa điểm — vườn lễ giữ nguyên bố cục gốc của bộ element (nhà
+ * vòm giữa, lối đi dẫn lên, ghế hai bên, hoa dọc lối).
+ *
+ * Tiêu đề đứng trên nền giấy như mọi section khác; thông tin đám cưới gom hết
+ * vào MỘT tấm khung giống màn chào ở intro, đặt THẤP hơn nhà vòm để không che
+ * mất nó — nhà vòm chính là chỗ làm lễ nên phải thấy được.
+ *
+ * Gom thông tin vào một khung vì nếu rải thành nhiều khối rời trên cảnh thì
+ * dòng dài như địa chỉ sẽ tràn ra ngoài vùng sáng và chìm vào đám ghế.
  *
  * Mặc định tiệc chính để route xem thử từng section vẫn gọi được không tham số.
  */
 export function TimeVenue({ party = PARTIES.main }: { party?: Party } = {}) {
   return (
-    <section id="time-venue" className="section section--fit section--before-divider relative">
-      <div className="section-inner">
+    <section id="time-venue" className="section section--fit cer relative">
+      <div className="cer-scene" aria-hidden>
+        {SCENE.map((layer) => {
+          const pos = CEREMONY[layer.id as keyof typeof CEREMONY];
+          return (
+            <Image
+              key={layer.id}
+              src={ART[layer.id].src}
+              alt=""
+              width={ART[layer.id].w}
+              height={ART[layer.id].h}
+              sizes="(max-width: 640px) 128vw, 820px"
+              className={`cer-layer ${layer.cls ?? ""}`}
+              style={{
+                left: `${pos.left * 100}%`,
+                top: `${pos.top * 100}%`,
+                width: `${pos.width * 100}%`,
+              }}
+            />
+          );
+        })}
+      </div>
+
+      <div className="section-inner cer-content">
+        {/* Tiêu đề đứng ngoài khung, trên nền giấy — giống mọi section khác.
+            Trong khung chỉ còn thông tin đám cưới. */}
         <Reveal className="section-head">
-          <HeadArt id="el-rings" height="4.5rem" />
+          <HeadArt id="el-rings" height="4rem" />
           <p className="eyebrow">Thời gian &amp; Địa điểm</p>
           <h2 className="display-2">Ngày chung đôi</h2>
           <Divider />
         </Reveal>
 
-        <Reveal delay={1}>
-          <div className="place-card">
-            <Image
-              src={ART["el-plate"].src}
-              alt=""
-              aria-hidden
-              width={ART["el-plate"].w}
-              height={ART["el-plate"].h}
-              sizes="(max-width: 640px) 110vw, 600px"
-              className="place-card-art"
+        <Reveal delay={1} className="cer-plate">
+          {/* Nét chỉ chạy một vòng quanh khối chữ, bốn góc cong LÕM vào — cùng
+              khung với màn chào ở intro. */}
+          <svg className="cer-plate-line" viewBox="0 0 320 300" preserveAspectRatio="none" aria-hidden>
+            <path
+              pathLength="100"
+              d="M 20 2 H 300 A 18 18 0 0 0 318 20 V 280 A 18 18 0 0 0 300 298 H 20 A 18 18 0 0 0 2 280 V 20 A 18 18 0 0 0 20 2 Z"
             />
+          </svg>
 
-            <div className="place-card-text">
-              <p className="place-card-label">The day</p>
-              <p className="place-card-date">{party.dateShort}</p>
-              <p className="place-card-sub">
-                {party.weekday} · {party.time}
-              </p>
+          <p className="place-card-label">The day</p>
+          <p className="place-card-date">{party.dateShort}</p>
+          <p className="place-card-sub">
+            {party.weekday} · {party.time}
+          </p>
 
-              <span className="place-card-rule" aria-hidden />
+          <span className="place-card-rule" aria-hidden />
 
-              <p className="place-card-label">The place</p>
-              <p className="place-card-venue">{party.venue}</p>
-              <p className="place-card-sub">{party.hall}</p>
-            </div>
+          <p className="place-card-label">The place</p>
+          <p className="place-card-venue">{party.venue}</p>
+          <p className="place-card-sub">{party.hall}</p>
 
-            <Decor id="seal" width="13%" top="21%" right="14%" front className="place-card-seal" />
-            <Decor
-              id="el-bouquet-magnolia"
-              width="32%"
-              bottom="-6%"
-              left="3%"
-              rotate={-24}
-              front
-              className="motion-sway"
-            />
-          </div>
-        </Reveal>
-
-        <Reveal delay={2} className="venue-text">
-          <p className="body-text body-text--sm text-balance">{party.address}</p>
+          <p className="cer-address">{party.address}</p>
           <p className="time-lunar">({COUPLE.lunar})</p>
-        </Reveal>
 
-        <Reveal delay={3} className="btn-row mt-[var(--space-4)]">
           <a
-            className="btn btn--outline"
+            className="btn btn--outline cer-map"
             href={party.mapUrl}
             target="_blank"
             rel="noreferrer noopener"
