@@ -114,16 +114,18 @@ const CANOPY: Layer[] = [
  * mép trái thì phải lùi cả lớp sang trái gần hết bề ngang của nó.
  */
 const FRONT: Layer[] = [
-  // bottom: 0 — mép dưới của ẢNH trùng đúng mép dưới section. Cho tràn xuống
-  // (bottom âm) thì mép section cắt ngang giữa bụi hoa, đúng cái "crop" cần
-  // tránh; kéo lên thì hở một dải giấy bên dưới.
-  { id: "garden-bloom-left", cls: "sc-fg sc-fg--l", style: { width: "70%", left: "-30%", bottom: "0" } },
-  { id: "garden-bloom-right", cls: "sc-fg sc-fg--r", style: { width: "70%", right: "-30%", bottom: "0" } },
+  // bottom âm — bụi hoa LẤN hẳn sang section kế tiếp. Làm được việc này là
+  // nhờ .sc giờ cho tràn theo chiều dọc (overflow-y: visible); trước đó mép
+  // section xén đứt nên phải để bottom: 0, và bụi hoa kết thúc bằng một
+  // đường ngang thẳng băng. Lấn sang thì không còn chỗ nào để thấy đường
+  // cắt nữa.
+  { id: "garden-bloom-left", cls: "sc-fg sc-fg--l", style: { width: "70%", left: "-30%", bottom: "-7%" } },
+  { id: "garden-bloom-right", cls: "sc-fg sc-fg--r", style: { width: "70%", right: "-30%", bottom: "-7%" } },
   // Hai bụi thấp khép kín RÃNH giữa ở sát đáy. Thiếu chúng thì mép dưới
   // section cắt ngang một dải cỏ phẳng — đúng cái vạch thẳng làm hỏng cảnh.
   // Nằm thấp hơn hẳn chỗ cặp đôi đứng nên không che mất hai người.
-  { id: "garden-bloom-right", cls: "sc-fg sc-fg--cl", style: { width: "58%", left: "-2%", bottom: "0" } },
-  { id: "garden-bloom-left", cls: "sc-fg sc-fg--cr", style: { width: "58%", right: "-2%", bottom: "0" } },
+  { id: "garden-bloom-right", cls: "sc-fg sc-fg--cl", style: { width: "58%", left: "-2%", bottom: "-5%" } },
+  { id: "garden-bloom-left", cls: "sc-fg sc-fg--cr", style: { width: "58%", right: "-2%", bottom: "-5%" } },
 ];
 
 /**

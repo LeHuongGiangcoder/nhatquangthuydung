@@ -104,6 +104,24 @@
     scroll-behavior: smooth;
   }
 
+  /* Nền giấy dán CỐ ĐỊNH sau toàn trang, vẽ đúng một lần.
+     Trước đây mỗi section tự vẽ một bản với background-size: cover; mỗi
+     section lại cao khác nhau nên tờ giấy bị phóng ở mỗi nơi một tỉ lệ, và
+     chỗ hai section giáp nhau hiện ra đúng một vạch thẳng do chênh tông —
+     kể cả khi không có hình nào bị cắt ngang ở đó. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--color-cream);
+    background-image: url("/assets/background.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+
   body {
     margin: 0;
     background-color: var(--color-cream);
@@ -144,14 +162,15 @@
        biến khung thành MỘT SCROLL CONTAINER riêng, và animation-timeline:
        view() sẽ bám vào nó thay vì bám vào trang — tiến trình đầy ngay từ
        đầu, hoa nở sẵn hết chứ không nở theo cuộn. */
-    overflow: clip;
-    /* Nền giấy gốc (3875x5462) — luôn được thu nhỏ để phủ 1 viewport,
-       không bao giờ phóng to, không lặp nên không có đường nối. */
-    background-color: var(--color-cream);
-    background-image: url("/assets/background.webp");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    /* Xén NGANG nhưng để tràn DỌC: trang trí ở gấu section nhờ vậy nối sang
+       section kế tiếp thay vì bị cắt ngang một nhát. `clip` chứ không
+       `hidden` vì `hidden` biến khung thành một scroll container riêng, và
+       animation-timeline: view() sẽ bám vào nó thay vì bám vào trang —
+       tiến trình đầy ngay từ đầu, hoa nở sẵn hết chứ không nở theo cuộn.
+       Nền giấy không còn vẽ ở đây: nó là một tấm cố định sau toàn trang
+       (body::before). */
+    overflow-x: clip;
+    overflow-y: visible;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -479,8 +498,9 @@
   /* Cho decor tràn lên/xuống sang section kế bên.
      overflow-x: clip + overflow-y: visible là cặp DUY NHẤT giữ được ý đồ này:
      hidden + visible sẽ bị tính lại thành auto và sinh thanh cuộn. */
+  /* Giữ lại cho tương thích: tràn dọc nay là mặc định của .section, nên
+     class này không còn làm gì thêm. */
   .section--bleed {
-    overflow-x: clip;
     overflow-y: visible;
   }
 
@@ -1135,15 +1155,10 @@
     position: relative;
     z-index: 1;
     min-height: 132svh;
-    /* `clip` chứ không `hidden`: cả hai đều xén phần tràn ra, nhưng `hidden`
-       biến khung thành MỘT SCROLL CONTAINER riêng, và animation-timeline:
-       view() sẽ bám vào nó thay vì bám vào trang — tiến trình đầy ngay từ
-       đầu, hoa nở sẵn hết chứ không nở theo cuộn. */
-    overflow: clip;
-    background-color: var(--color-cream);
-    background-image: url("/assets/background.webp");
-    background-size: cover;
-    background-position: center;
+    /* Xén NGANG nhưng để tràn DỌC, cùng lý do như .section. Nền giấy dùng
+       chung tấm cố định ở body::before, không vẽ riêng ở đây nữa. */
+    overflow-x: clip;
+    overflow-y: visible;
   }
 
   /* Camera — cú đẩy tới là MỘT transform duy nhất ở đây cho cả cảnh. Gốc đặt

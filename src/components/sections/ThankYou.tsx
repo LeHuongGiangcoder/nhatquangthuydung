@@ -30,7 +30,7 @@ export function ThankYou() {
       /* pb-44: dải bụi hoa chân section cao ~7rem, nhưng chừa đúng bằng đó thì
          dòng chữ cuối nằm sát ngay trên ngọn lá. Chừa rộng gấp rưỡi để khối
          chữ có chỗ thở. */
-      className="section section--fit relative overflow-hidden pb-44"
+      className="section section--fit relative pb-44"
     >
       {/* Bụi hoa trắng chân section: hai lớp lệch nhau cho dày, lớp sau lật
           gương và tụt xuống để không lộ ra là cùng một dải lặp lại.
