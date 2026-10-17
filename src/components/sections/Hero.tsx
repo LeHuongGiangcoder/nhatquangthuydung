@@ -408,7 +408,12 @@ export function Hero({ guestName }: HeroProps = {}) {
 
       {/* ── Màn 2: thiệp ── */}
       <div className="sc-card" aria-hidden={!open3}>
-        {/* Chỗ trống giữ đúng kích thước monogram. Monogram thật là con bay
+        {/* Mọi kích thước của khối chữ này tính bằng --u (xem globals.css),
+            không dùng thang rem chung của site: cảnh vườn co theo khung mà
+            chữ giữ nguyên px thì trên máy thấp như SE chữ tràn xuống đè lên
+            lâu đài.
+
+            Chỗ trống giữ đúng kích thước monogram. Monogram thật là con bay
             từ màn chào tới và ĐỨNG LẠI ở đây — nên ô này luôn trong suốt,
             chỉ có nhiệm vụ chiếm chỗ cho các dòng chữ bên dưới. Nó đứng đầu
             khối chữ, trên cả lời chào. */}
@@ -420,25 +425,25 @@ export function Hero({ guestName }: HeroProps = {}) {
             width={MONOGRAM.w}
             height={MONOGRAM.h}
             sizes="(max-width: 640px) 13vw, 80px"
-            className="sc-card-mono mx-auto block h-auto w-[13%] max-w-[4.75rem]"
+            className="sc-card-mono mx-auto block h-auto"
           />
         </div>
 
-        <Reveal className="mt-[var(--space-3)] max-w-[17.5rem]" when={open3}>
+        <Reveal className="sc-row sc-row--guest" when={open3}>
           <p className="guest-line">
             {HERO.greeting}, {guestName?.trim() || HERO.guest}
           </p>
         </Reveal>
 
-        <Reveal delay={1} className="mt-3 max-w-[19rem]" when={open3}>
+        <Reveal delay={1} className="sc-row sc-row--invite" when={open3}>
           <p className="invite-line">{HERO.invite}</p>
         </Reveal>
 
-        <Reveal delay={3} className="mt-[var(--space-4)]" when={open3}>
+        <Reveal delay={3} className="sc-row sc-row--name" when={open3}>
           <h1 className="display-1 display-1--shine">{COUPLE.groom}</h1>
         </Reveal>
 
-        <Reveal delay={3} className="my-2" when={open3}>
+        <Reveal delay={3} className="sc-row sc-row--cross" when={open3}>
           <Cross />
         </Reveal>
 
@@ -446,11 +451,11 @@ export function Hero({ guestName }: HeroProps = {}) {
           <p className="display-1 display-1--shine display-1--shine-late">{COUPLE.bride}</p>
         </Reveal>
 
-        <Reveal delay={4} className="mt-5" when={open3}>
+        <Reveal delay={4} className="sc-row sc-row--date" when={open3}>
           <p className="date-text date-text--hero">{COUPLE.dateDisplay}</p>
         </Reveal>
 
-        <Reveal delay={5} className="mt-3" when={open3}>
+        <Reveal delay={5} className="sc-row sc-row--city" when={open3}>
           <p className="eyebrow">{COUPLE.city}</p>
         </Reveal>
       </div>

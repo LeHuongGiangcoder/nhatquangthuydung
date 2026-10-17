@@ -1491,6 +1491,10 @@
      vẫn ăn cú chạm. Trên màn cao thì chữ của nó nằm phía trên nút nên không
      ai thấy gì; trên màn thấp nó rơi đúng vào nút "Mở thiệp" và nuốt mất cú
      bấm — đó là vì sao 16 Pro Max bấm được mà SE thì không. */
+  /* Khối chữ của thiệp tính TẤT CẢ bằng --u, không dùng thang rem chung của
+     site. Cảnh vườn co theo khung sân khấu, nên nếu chữ giữ nguyên px thì
+     trên máy thấp (SE: khung chỉ còn 82%) chữ to vượt cảnh và tràn xuống đè
+     lên lâu đài. Các số dưới đây là giá trị đo được ở bản gốc 375x812. */
   .sc-card {
     pointer-events: none;
     position: absolute;
@@ -1500,7 +1504,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 19vh var(--space-4) 0;
+    padding: calc(var(--u) * 154) calc(var(--u) * 40) 0;
     text-align: center;
   }
 
@@ -1569,6 +1573,51 @@
 
   .sc[data-phase="open"] .sc-card {
     pointer-events: auto;
+  }
+
+  .sc-card-mono {
+    width: calc(var(--u) * 38);
+  }
+
+  .sc-row {
+    width: 100%;
+  }
+  .sc-row--guest {
+    max-width: calc(var(--u) * 280);
+    margin-top: calc(var(--u) * 24);
+  }
+  .sc-row--invite {
+    max-width: calc(var(--u) * 304);
+    margin-top: calc(var(--u) * 12);
+  }
+  .sc-row--name { margin-top: calc(var(--u) * 40); }
+  .sc-row--cross { margin: calc(var(--u) * 8) 0; }
+  .sc-row--date { margin-top: calc(var(--u) * 20); }
+  .sc-row--city { margin-top: calc(var(--u) * 12); }
+
+  /* Cỡ chữ trong thiệp — số gốc đo ở 375x812 */
+  .sc-card .guest-line {
+    font-size: calc(var(--u) * 15);
+    letter-spacing: calc(var(--u) * 3);
+    line-height: calc(var(--u) * 21);
+  }
+  .sc-card .invite-line {
+    font-size: calc(var(--u) * 15);
+    line-height: calc(var(--u) * 24);
+  }
+  .sc-card .display-1 {
+    font-size: calc(var(--u) * 35.25);
+    line-height: calc(var(--u) * 37);
+  }
+  .sc-card .date-text {
+    font-size: calc(var(--u) * 21.75);
+    letter-spacing: calc(var(--u) * 2);
+    line-height: calc(var(--u) * 22);
+  }
+  .sc-card .eyebrow {
+    font-size: calc(var(--u) * 11);
+    letter-spacing: calc(var(--u) * 3.74);
+    line-height: calc(var(--u) * 15.4);
   }
 
   /* Mở xong thì màn chào thôi nhận chạm, nhường lại cho thiệp */
