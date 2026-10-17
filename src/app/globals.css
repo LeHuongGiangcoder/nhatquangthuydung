@@ -1949,8 +1949,8 @@
   .sc-bloom {
     animation:
       bloom-open 1.65s cubic-bezier(0.2, 0.9, 0.3, 1) var(--bloom-delay, 0.5s) both,
-      bloom-sway var(--bloom-sway, 7s) ease-in-out
-        calc(var(--bloom-delay, 0.5s) + 1.5s) infinite alternate;
+      bloom-sway calc(var(--bloom-sway, 7s) * 2) ease-in-out
+        calc(var(--bloom-delay, 0.5s) + 1.65s) infinite;
   }
 
   /* ══ MÀN 1 DỰNG LÊN ══ từ dưới lên: bậc thềm → cột → rèm → đèn chùm → hoa */
@@ -2109,13 +2109,13 @@
   .sc[data-phase="open"] .sc-bloom--tl {
     --canopy-x: -1;
     animation: sc-canopy-settle 3s var(--ease-soft) 0.62s both,
-      bloom-sway 6.5s ease-in-out 3.6s infinite alternate;
+      canopy-sway 13s ease-in-out 3.62s infinite;
   }
   .sc[data-phase="opening"] .sc-bloom--tr,
   .sc[data-phase="open"] .sc-bloom--tr {
     --canopy-x: 1;
     animation: sc-canopy-settle 3s var(--ease-soft) 0.62s both,
-      bloom-sway 8.2s ease-in-out 4s infinite alternate;
+      canopy-sway 16.4s ease-in-out 3.62s infinite;
   }
 
   /* Tiền cảnh dựng lên từ mép dưới khi camera tới đủ gần */
@@ -2343,9 +2343,37 @@
   100% { opacity: 1; translate: 0 0; scale: 1; }
 }
 
+/* Lắc lư phải ĐI QUA trạng thái nghỉ ở mốc 0%/100%, không phải bắt đầu ở một
+   đầu biên: animation sau trong danh sách thắng ngay giây nó khởi động, nên
+   nếu 0% là `rotate: -2.6deg` thì bó hoa vừa nở xong đang ở 0deg sẽ bị giật
+   một nhịp sang -2.6deg. Vì thế dùng chu kỳ trọn vẹn (không `alternate`) với
+   hai đầu biên nằm ở 25% và 75%. */
 @keyframes bloom-sway {
-  from { rotate: -2.6deg; scale: 1; }
-  to { rotate: 2.6deg; scale: 1.03; }
+  0%, 100% { rotate: 0deg; scale: 1; }
+  25% { rotate: -2.6deg; scale: 1.01; }
+  75% { rotate: 2.6deg; scale: 1.03; }
+}
+
+/* Cùng lý do, nhưng vòm hoa đỉnh còn phải GIỮ chỗ mà sc-canopy-settle vừa đưa
+   nó tới (dạt ra góc, to lên 1.2). bloom-sway đặt `scale: 1` nên nếu dùng
+   chung thì đúng lúc nó khởi động vòm hoa sẽ thụt từ 1.2 về 1 — đó là cú giật
+   rõ nhất. Mỗi mốc ở đây vì thế lặp lại nguyên translate/scale của settle. */
+@keyframes canopy-sway {
+  0%, 100% {
+    translate: calc(var(--canopy-x, 0) * 10%) 4%;
+    scale: 1.2;
+    rotate: 0deg;
+  }
+  25% {
+    translate: calc(var(--canopy-x, 0) * 10%) 4%;
+    scale: 1.21;
+    rotate: -2deg;
+  }
+  75% {
+    translate: calc(var(--canopy-x, 0) * 10%) 4%;
+    scale: 1.23;
+    rotate: 2deg;
+  }
 }
 
 @keyframes sc-stage-in {
