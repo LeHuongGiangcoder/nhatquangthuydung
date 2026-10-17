@@ -291,8 +291,18 @@ export function Hero({ guestName }: HeroProps = {}) {
             <Layers layers={DOVES} />
           </div>
 
-          <Layers layers={ARCH} />
-          <Layers layers={CANOPY} />
+          {/* Khung cổng nằm trong một nhóm RỘNG BẰNG MÀN HÌNH, không bằng
+              sân khấu. Sân khấu có tỉ lệ cố định 375x812 nên trên máy có tỉ
+              lệ rộng hơn thế, nó hẹp hơn màn hình và hở ra hai dải giấy ở
+              rìa. Khu vườn cứ giữ trong sân khấu để bố cục không méo, còn
+              cột, rèm và hai vòm hoa thì bám theo mép màn hình — chúng là
+              phần viền nên giãn thêm chút không ảnh hưởng gì, mà bịt kín
+              được chỗ hở. Trên máy đúng tỉ lệ 375x812 thì hai khung này
+              bằng nhau, không có gì đổi. */}
+          <div className="sc-frame">
+            <Layers layers={ARCH} />
+            <Layers layers={CANOPY} />
+          </div>
         </div>
       </div>
 
