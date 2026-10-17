@@ -6,20 +6,24 @@ import { ART, CEREMONY, type ArtId } from "@/lib/layers";
 import { COUPLE, PARTIES, type Party } from "@/lib/content";
 
 /**
- * Cảnh vườn lễ cưới, xếp từ xa ra gần đúng thứ tự trong HUONG-DAN.txt của bộ
- * element: cây bách → hai cây lá → hàng rào → cỏ & lối đi → nhà vòm → bình
- * hoa → ghế → hoa cuối lối → hoa giữa lối → hoa tiền cảnh.
+ * Cảnh vườn lễ cưới, chồng lớp đúng thứ tự ghi trong HUONG-DAN.txt: cỏ & lối
+ * đi → cây bách → hai cây lá → hàng rào → nhà vòm → bình hoa → ghế → hoa cuối
+ * lối → hoa giữa lối → hoa tiền cảnh.
  *
  * Toạ độ KHÔNG đặt tay: 14 lớp này vốn nằm trên cùng một canvas 1108x1420,
  * script dựng asset đã ghi lại vị trí từng lớp vào CEREMONY. Ở đây chỉ việc
  * đọc ra, nên cảnh ghép lại khít đúng bản gốc ở mọi bề ngang.
  */
 const SCENE: { id: ArtId; cls?: string }[] = [
+  // Thứ tự này là thứ tự CHỒNG LỚP ghi trong HUONG-DAN.txt (số file tăng
+  // dần), không phải thứ tự xa-gần. Cỏ và lối đi nằm DƯỚI CÙNG, dưới cả hàng
+  // cây bách: nhìn xuyên qua khoảng trống giữa các cột nhà vòm thì phải thấy
+  // hàng cây phía sau, chứ không phải lối đi.
+  { id: "cer-lawn" },
   { id: "cer-cypress" },
   { id: "cer-tree-left", cls: "cer-sway cer-sway--l" },
   { id: "cer-tree-right", cls: "cer-sway cer-sway--r" },
   { id: "cer-fence" },
-  { id: "cer-lawn" },
   { id: "cer-gazebo" },
   { id: "cer-urns" },
   { id: "cer-chairs" },
@@ -30,7 +34,6 @@ const SCENE: { id: ArtId; cls?: string }[] = [
   { id: "cer-front-left", cls: "cer-bloom cer-bloom--5" },
   { id: "cer-front-right", cls: "cer-bloom cer-bloom--6" },
 ];
-
 /**
  * Thời gian & Địa điểm — vườn lễ giữ nguyên bố cục gốc của bộ element (nhà
  * vòm giữa, lối đi dẫn lên, ghế hai bên, hoa dọc lối).

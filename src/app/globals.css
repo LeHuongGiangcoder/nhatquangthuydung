@@ -1702,10 +1702,12 @@
     user-select: none;
   }
 
-  /* Không hỗ trợ scroll timeline thì cảnh hiện đủ ngay, chỉ mất phần dựng
-     dần — xem khối @supports ở cuối file. */
+  /* Không hỗ trợ scroll timeline thì cảnh hiện đủ ngay — xem @supports cuối
+     file. Ẩn CẢ NHÓM chứ không ẩn từng lớp: 14 lớp này đã căn sẵn trên cùng
+     một canvas, cho mỗi lớp một nhịp hiện riêng thì giữa chừng chúng lệch độ
+     mờ và lệch cả vị trí, lúc đó lớp cỏ hở ra sau nhà vòm. */
   @supports (animation-timeline: view()) {
-    .cer-layer {
+    .cer-scene {
       opacity: 0;
     }
   }
@@ -2218,42 +2220,19 @@
   /* Hiệu ứng gắn theo vị trí cuộn — trình duyệt chưa hỗ trợ thì phần tử đứng
      yên ở trạng thái cuối, không mất gì. */
   @supports (animation-timeline: view()) {
-    /* ── Vườn lễ dựng dần theo CUỘN ──
-       Cùng ý với màn chào ở intro — cảnh không hiện ra một cục mà từng lớp
-       đến lần lượt — chỉ khác là tiến trình bám vào vị trí cuộn, không vào
-       đồng hồ. Lớp càng gần càng tới sau, nên mắt đọc được chiều sâu ngay
-       trong lúc cảnh đang dựng. */
-    .cer-layer {
-      animation: cer-layer-in linear both;
+    /* ── Vườn lễ hiện theo CUỘN ──
+       Cả cảnh hiện như MỘT khối. Bản trước cho từng lớp một khoảng cuộn
+       riêng để dựng dần từ xa ra gần, nhưng bộ này đã căn sẵn chung canvas:
+       giữa chừng lớp này đậm hơn lớp kia và dịch khác nhau vài pixel, đủ để
+       lối đi hở ra trước nhà vòm. Chuyển động riêng của từng lớp (cây
+       nghiêng, hoa thở) vẫn giữ, vì biên rất nhỏ và không phá bố cục. */
+    .cer-scene {
+      animation: cer-scene-in linear both;
       animation-timeline: view();
-      animation-range: entry 12% entry 62%;
-    }
-    .cer-scene img:nth-child(1) { animation-range: entry 8% entry 44%; }
-    .cer-scene img:nth-child(2),
-    .cer-scene img:nth-child(3) { animation-range: entry 12% entry 48%; }
-    .cer-scene img:nth-child(4),
-    .cer-scene img:nth-child(5) { animation-range: entry 16% entry 52%; }
-    .cer-scene img:nth-child(6) { animation-range: entry 20% entry 58%; }
-    .cer-scene img:nth-child(7),
-    .cer-scene img:nth-child(8) { animation-range: entry 26% entry 64%; }
-    .cer-scene img:nth-child(n + 9) { animation-range: entry 32% entry 74%; }
-
-    /* Lớp có nhịp riêng phải khai báo HAI chuỗi trong cùng một `animation`
-       kèm hai timeline tương ứng. Tách thành rule riêng thì rule sau ghi đè
-       cả shorthand và nuốt mất chuỗi trước — lớp hiện ra nhưng đứng chết. */
-    .cer-sway {
-      animation:
-        cer-layer-in linear both,
-        cer-sway 15s ease-in-out infinite alternate;
-      animation-timeline: view(), auto;
-      animation-range: entry 12% entry 48%, normal;
-    }
-    .cer-bloom {
-      animation:
-        cer-layer-in linear both,
-        cer-breathe var(--cer-dur, 12s) ease-in-out var(--cer-delay, 0s) infinite alternate;
-      animation-timeline: view(), auto;
-      animation-range: entry 32% entry 74%, normal;
+      /* `cover` chứ không `entry`: khối này CAO HƠN màn hình nên nó không bao
+         giờ "vào hẳn" được, pha entry vì thế kẹt ở 0 và cảnh không bao giờ
+         hiện ra. */
+      animation-range: cover 0% cover 16%;
     }
 
     /* ── Nở theo CUỘN ──
@@ -2517,11 +2496,12 @@
 }
 
 /* Parallax dùng chung: --drift dương là tụt lại sau trang, âm là vượt lên. */
-/* Lớp vườn lễ trôi vào theo cuộn. Biên rất nhỏ: đây là phần đọc thông tin,
-   lớp chỉ cần "đến nơi" chứ không cần bay. */
-@keyframes cer-layer-in {
-  0% { opacity: 0; translate: 0 4%; }
-  100% { opacity: 1; translate: 0 0; }
+/* Cả cảnh vườn lễ hiện lên như một khối khi cuộn tới.
+   CHỈ động vào opacity: .cer-scene đang dùng `translate: -50% 0` để căn giữa,
+   đụng vào translate ở đây là ghi đè mất và cả cảnh lệch hẳn sang phải. */
+@keyframes cer-scene-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Cảm ơn: ô quay, đốm lấp lánh, bướm chao lượn */
