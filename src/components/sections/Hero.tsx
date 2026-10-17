@@ -238,13 +238,12 @@ export function Hero({ guestName }: HeroProps = {}) {
   }, []);
 
   const open = useCallback(() => {
-    // Nhạc phải phát NGAY trong handler của cú bấm. Đẩy xuống setTimeout là
-    // trình duyệt không còn coi là do người dùng khởi động và chặn luôn.
-    audioRef.current?.play().catch(() => {
-      /* Vài máy vẫn chặn (chế độ tiết kiệm pin, cài đặt riêng) — thiệp cứ mở
-         bình thường, chỉ là không có nhạc. */
-    });
-
+    // MỞ THIỆP TRƯỚC, nhạc tính sau. Thứ tự này không phải tiểu tiết: bản cũ
+    // gọi play() trước rồi mới setPhase, mà trong WebKit của iOS play() có
+    // phiên bản trả về undefined thay vì Promise — `.catch` gắn vào undefined
+    // ném TypeError ngay, handler đứt giữa chừng và thiệp không bao giờ mở.
+    // Trên iOS thì Safari, Chrome và webview Zalo dùng chung một WebKit nên
+    // hỏng cả ba, trong khi máy bàn vẫn chạy ngon.
     setPhase((current) => {
       if (current !== "welcome") return current;
       timers.current.push(
@@ -255,13 +254,31 @@ export function Hero({ guestName }: HeroProps = {}) {
       );
       return "opening";
     });
+
+    // Phải nằm trong chính handler của cú bấm thì trình duyệt mới coi là do
+    // người dùng khởi động; đẩy xuống setTimeout là bị chặn. Bọc kỹ vì
+    // play() có thể ném đồng bộ HOẶC trả về undefined tuỳ máy.
+    try {
+      const played = audioRef.current?.play();
+      if (played && typeof played.catch === "function") {
+        played.catch(() => {
+          /* Máy chặn tự phát (tiết kiệm pin, cài đặt riêng) — thiệp vẫn mở
+             bình thường, chỉ là không có nhạc. */
+        });
+      }
+    } catch {
+      /* Như trên. */
+    }
   }, []);
 
   const open3 = phase === "open";
 
   return (
     <section id="hero" ref={sceneRef} className="sc" data-phase={phase}>
-      <audio ref={audioRef} src="/golden-hour.mp4" loop preload="auto" />
+      {/* preload="none": file nhạc 4MB mà tải ngay lúc vào trang thì trên mạng
+          di động nó giành băng thông với bundle JS, trang hiện ra nhưng chưa
+          hydrate nên bấm nút không ăn. Chỉ nạp khi thật sự bấm. */}
+      <audio ref={audioRef} src="/golden-hour.mp4" loop preload="none" />
       {/* Camera: cú đẩy tới nằm ở ĐÂY, một transform duy nhất cho cả cảnh.
           Từng nhóm lớp bên trong còn chuyển động riêng của nó. */}
       <div className="sc-camera">

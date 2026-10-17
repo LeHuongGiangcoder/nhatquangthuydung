@@ -1148,6 +1148,12 @@
     /* Bề ngang khung — khai báo ở đây vì cả .sc-stage lẫn .sc-front-band đều
        phải rộng đúng bằng nhau. */
     --stage-w: min(100vw, 40rem, calc(100svh * 0.4618));
+    /* 1u = 1px của bản thiết kế gốc (khung rộng 375). Mọi kích thước của màn
+       chào tính bằng u, nên ở máy nào bố cục cũng y hệt nhau, chỉ to nhỏ
+       khác đi. Để chữ theo rem/vw còn cảnh theo khung thì hai thứ giãn theo
+       hai nhịp khác nhau, máy to lên là chữ xuống dòng và khối chữ lệch hẳn
+       khỏi khung cổng. */
+    --u: calc(var(--stage-w) / 375);
     /* Cao hơn màn hình một quãng: cảnh vườn cần chỗ kết thúc đàng hoàng dưới
        đáy (bãi cỏ → đài phun nước → bụi hoa tràn qua mép) thay vì bị mép
        section cắt ngang giữa toà nhà. Màn chào vẫn khít đúng một màn hình vì
@@ -1390,8 +1396,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-5);
-    padding-inline: var(--space-4);
+    gap: calc(var(--u) * 56);
+    padding-inline: calc(var(--u) * 20);
     text-align: center;
   }
 
@@ -1400,8 +1406,8 @@
      sau vẫn nhìn xuyên được. */
   .sc-plate {
     position: relative;
-    width: min(86vw, 19.5rem);
-    padding: var(--space-4) var(--space-4) var(--space-4);
+    width: calc(var(--u) * 312);
+    padding: calc(var(--u) * 24) calc(var(--u) * 22);
   }
   .sc-plate::before {
     content: "";
@@ -1436,13 +1442,15 @@
   }
 
   .sc-welcome-eyebrow {
-    max-width: 14rem;
-    margin: 0 auto var(--space-3);
+    max-width: calc(var(--u) * 224);
+    margin: 0 auto calc(var(--u) * 18);
+    font-size: calc(var(--u) * 11);
+    letter-spacing: calc(var(--u) * 2.4);
   }
   /* Nhỏ hơn tên ở thiệp một bậc: tên phải lọt gọn trong khung nét chỉ, mà
      khung đó lại phải hẹp hơn màn hình mới thấy được bốn cạnh. */
   .sc-welcome-name {
-    font-size: clamp(1.6rem, 7.6vw, 2.5rem);
+    font-size: calc(var(--u) * 28.5);
     color: var(--color-ink);
   }
 
@@ -1458,7 +1466,7 @@
     left: 50%;
     top: 50svh;
     z-index: 7;
-    width: min(26vw, 7.5rem);
+    width: calc(var(--u) * 97.5);
     height: auto;
     translate: -50% -50%;
     opacity: 0;
@@ -1488,11 +1496,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: min(80%, 22rem);
-    height: 4rem;
-    padding-inline: 1.5rem;
+    width: calc(var(--u) * 300);
+    height: calc(var(--u) * 64);
+    padding-inline: calc(var(--u) * 24);
     border: 1px solid rgba(255, 255, 255, 0.55);
-    border-radius: 1.75rem;
+    border-radius: calc(var(--u) * 28);
     background: linear-gradient(
       150deg,
       rgba(255, 255, 255, 0.3),
@@ -1506,14 +1514,16 @@
       inset 0 1px 1px rgba(255, 255, 255, 0.8),
       inset 0 -1px 1px rgba(255, 255, 255, 0.28);
     font-family: var(--font-body);
-    font-size: 0.9375rem;
+    font-size: calc(var(--u) * 15);
     font-weight: 600;
-    letter-spacing: 0.32em;
+    letter-spacing: calc(var(--u) * 4.8);
     text-transform: uppercase;
-    text-indent: 0.32em;
+    text-indent: calc(var(--u) * 4.8);
     line-height: 1;
     color: var(--color-olive);
     cursor: pointer;
+    /* Bỏ độ trễ 300ms và cử chỉ double-tap-to-zoom trên di động */
+    touch-action: manipulation;
     transition:
       background 0.4s var(--ease-soft),
       translate 0.45s var(--ease-soft),
