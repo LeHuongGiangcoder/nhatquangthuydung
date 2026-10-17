@@ -1290,6 +1290,11 @@
     position: absolute;
     left: 50%;
     top: 0;
+    /* z-index BẮT BUỘC phải đặt: `translate` bên dưới tạo một stacking
+       context riêng, nên z-index của đám con bên trong chỉ còn so với nhau,
+       còn cả nhóm thì lấy z-index của chính nó. Để `auto` (=0) là toàn bộ
+       khung cổng chìm xuống dưới .sc-garden (z-1). */
+    z-index: 3;
     width: 100vw;
     height: 100%;
     translate: -50% 0;
@@ -1306,8 +1311,10 @@
   /* Thang chiều sâu, từ xa ra gần:
        1  khu vườn (cây xa → lâu đài → sân vườn → bồ câu → cặp đôi)
        2  tiền cảnh (cây lớn, hai bụi hoa) — chỉ hiện khi camera tiến tới
-       3  khung cổng (bậc thềm → cột → rèm → đèn chùm → hoa chân cột)
-       4  vòm hoa đỉnh — lớp DUY NHẤT đi qua được cả hai màn
+       3  .sc-frame — cả nhóm khung cổng, bên trong lại chia tiếp:
+            3  bậc thềm → rèm → cột → đèn chùm
+            4  vòm hoa đỉnh — lớp DUY NHẤT đi qua được cả hai màn
+            5  hoa chân khung — gần ống kính nhất nên nằm trên hết
      Trong cùng một bậc thì thứ tự trong DOM quyết định. */
   .sc-garden {
     position: absolute;
@@ -1318,18 +1325,22 @@
   .sc-fg {
     z-index: 2;
   }
-  .sc-verge,
   .sc-steps,
   .sc-column,
   .sc-curtain,
-  .sc-chandelier,
-  .sc-bloom--bl,
-  .sc-bloom--br {
+  .sc-chandelier {
     z-index: 3;
   }
   .sc-bloom--tl,
   .sc-bloom--tr {
     z-index: 4;
+  }
+  /* Hoa ở chân khung là thứ gần ống kính nhất trong cảnh, nên nằm trên cả
+     vòm hoa đỉnh lẫn mọi thứ khác của khung cổng. */
+  .sc-bloom--bl,
+  .sc-bloom--br,
+  .sc-verge {
+    z-index: 5;
   }
 
   /* Cột kéo cao rời khỏi tỉ lệ gốc — xem Hero.tsx. Thân cột là rãnh dọc lặp
