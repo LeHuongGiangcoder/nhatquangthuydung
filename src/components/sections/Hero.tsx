@@ -64,12 +64,12 @@ const ARCH: Layer[] = [
   {
     id: "arch-column-left",
     cls: "sc-column sc-column--l",
-    style: { width: "15%", height: "74%", left: "-5%", bottom: "9%" },
+    style: { width: "19%", height: "74%", left: "-3%", bottom: "9%" },
   },
   {
     id: "arch-column-right",
     cls: "sc-column sc-column--r",
-    style: { width: "15%", height: "74%", right: "-5%", bottom: "9%" },
+    style: { width: "19%", height: "74%", right: "-3%", bottom: "9%" },
   },
   // Rèm phải to tới mức CHẠM hẳn hai góc trên của màn hình. Vừa đủ trùm đầu
   // cột thôi thì vẫn còn hai nêm giấy trắng lọt ở hai góc, và mất luôn cảm

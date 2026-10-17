@@ -1486,7 +1486,13 @@
   }
 
   /* ── Màn 2: thiệp ── */
+  /* pointer-events: none khi chưa mở. Khối này cùng z-index với màn chào
+     nhưng đứng sau trong DOM nên nằm ĐÈ lên, và tuy opacity: 0 (vô hình) nó
+     vẫn ăn cú chạm. Trên màn cao thì chữ của nó nằm phía trên nút nên không
+     ai thấy gì; trên màn thấp nó rơi đúng vào nút "Mở thiệp" và nuốt mất cú
+     bấm — đó là vì sao 16 Pro Max bấm được mà SE thì không. */
   .sc-card {
+    pointer-events: none;
     position: absolute;
     inset-inline: 0;
     top: 0;
@@ -1559,6 +1565,16 @@
   .glass-btn:focus-visible {
     outline: 2px solid rgba(84, 78, 48, 0.6);
     outline-offset: 4px;
+  }
+
+  .sc[data-phase="open"] .sc-card {
+    pointer-events: auto;
+  }
+
+  /* Mở xong thì màn chào thôi nhận chạm, nhường lại cho thiệp */
+  .sc[data-phase="opening"] .sc-welcome,
+  .sc[data-phase="open"] .sc-welcome {
+    pointer-events: none;
   }
 
   /* Nút tắt/bật nhạc — nhỏ, nép góc, không tranh chỗ với nội dung thiệp */
