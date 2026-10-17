@@ -470,12 +470,17 @@
   }
 
   /* Ruy băng trải hơn cả bề ngang: đầu mút bên trái thò ra ngoài mép, nơ và
-     đuôi dạt hẳn về mép phải (đuôi chỉ bị cắt ~1%) để không đè lên chữ của
-     section kế tiếp. */
+     đuôi dạt hẳn về mép phải để không đè lên chữ của section kế tiếp.
+
+     left PHẢI bằng đúng 100% - width: ảnh ruy băng đã được cắt sát, nơ và dải
+     đuôi chạm đúng mép phải của ảnh. Thò ra dù chỉ 1% là section (overflow-x:
+     clip) xén thẳng một đường dọc qua vòng nơ và thân đuôi — trên điện thoại
+     hẹp trông như ruy băng chưa vẽ xong. Mép trái thì chỉ là sợi mảnh nhạt
+     dần nên thò bao nhiêu cũng không ai thấy. */
   .section-hem > .hem-ribbon {
     position: absolute;
     top: 0;
-    left: -4%;
+    left: -5%;
     z-index: 2;
     width: 105%;
     max-width: none;
