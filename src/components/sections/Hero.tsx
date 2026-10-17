@@ -57,23 +57,11 @@ const GARDEN: Layer[] = [
  * chỉ còn ló một dải thân; đầu trụ khuất sau rèm và vòm hoa.
  */
 const ARCH: Layer[] = [
-  // Bục vừa tràn ra hai bên vừa phải dâng ĐỦ CAO: lòng đài phun nước của lớp
-  // sân vườn nằm ngay trên mặt bục, bục thấp là nó lộ ra thành một mảng xám
-  // phẳng vắt ngang thảm cỏ.
   { id: "arch-steps", cls: "sc-steps", style: { width: "152%", left: "-26%", bottom: "-2%" } },
-  {
-    id: "arch-column-left",
-    cls: "sc-column sc-column--l",
-    style: { width: "19%", height: "74%", left: "-3%", bottom: "9%" },
-  },
-  {
-    id: "arch-column-right",
-    cls: "sc-column sc-column--r",
-    style: { width: "19%", height: "74%", right: "-3%", bottom: "9%" },
-  },
-  // Rèm phải to tới mức CHẠM hẳn hai góc trên của màn hình. Vừa đủ trùm đầu
-  // cột thôi thì vẫn còn hai nêm giấy trắng lọt ở hai góc, và mất luôn cảm
-  // giác tấm vải đang treo từ ngoài khung vào.
+  // Rèm vẽ TRƯỚC cột, nên cột nằm đè lên rèm. Thứ tự ngược lại (rèm sau) chỉ
+  // đúng ở khung 375 gốc, nơi phần vải đục của rèm chưa với tới cột; khung
+  // rộng theo màn hình thì vải trải xa hơn và trùm kín luôn cây cột. Rèm
+  // buông phía sau hàng cột cũng là cách treo bình thường.
   {
     id: "arch-curtain-left",
     cls: "sc-curtain sc-curtain--l",
@@ -84,14 +72,28 @@ const ARCH: Layer[] = [
     cls: "sc-curtain sc-curtain--r",
     style: { width: "88%", right: "-14%", top: "-4%" },
   },
+  // THÂN cột chỉ chiếm 31%–69% bề ngang ảnh, hai bên là khoảng trong suốt
+  // (đo bằng alpha của arch-column-left.webp). Nên bề rộng đặt ở đây KHÔNG
+  // phải bề rộng nhìn thấy: với 19% thì thân thật chỉ còn hơn 30px, lại
+  // chừa một quãng trống sát mép màn hình nên trông như cột bị đẩy ra ngoài.
+  // 29% / -9% cho thân cột bắt đầu đúng ở mép và rộng chừng 11% màn hình,
+  // giữ nguyên tỉ lệ đó ở mọi bề ngang máy.
+  {
+    id: "arch-column-left",
+    cls: "sc-column sc-column--l",
+    style: { width: "29%", height: "74%", left: "-9%", bottom: "9%" },
+  },
+  {
+    id: "arch-column-right",
+    cls: "sc-column sc-column--r",
+    style: { width: "29%", height: "74%", right: "-9%", bottom: "9%" },
+  },
   { id: "arch-chandelier", cls: "sc-chandelier", style: { width: "34%", left: "33%", top: "7%" } },
   { id: "arch-flowers-base-left", cls: "sc-bloom sc-bloom--bl", style: { width: "72%", left: "-20%", bottom: "-9%" } },
   { id: "arch-flowers-base-right", cls: "sc-bloom sc-bloom--br", style: { width: "72%", right: "-20%", bottom: "-11%" } },
   // Hai bụi thấp vắt ngang chân khung. Hai bó hoa chân cột chỉ ôm được hai
   // mép, còn lại giữa là một mảng cỏ với bậc thềm trống trơn — chính mảng
   // nhạt đó làm chân màn hình trông hụt.
-  // Dùng cụm hoa của bộ vườn lễ cưới chứ không lặp lại bụi hồng trắng: hai
-  // cụm cùng kiểu đặt cạnh nhau trông như một ảnh bị dán hai lần.
   { id: "cer-front-left", cls: "sc-bloom sc-verge sc-verge--l", style: { width: "66%", left: "-10%", bottom: "-4%" } },
   { id: "cer-front-right", cls: "sc-bloom sc-verge sc-verge--r", style: { width: "66%", right: "-10%", bottom: "-6%" } },
 ];
