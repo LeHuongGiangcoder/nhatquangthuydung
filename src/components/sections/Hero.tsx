@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Amp } from "@/components/Cross";
+import { Cross } from "@/components/Cross";
 import { Reveal } from "@/components/Reveal";
 import { ART, type ArtId } from "@/lib/layers";
 import { COUPLE, HERO, MONOGRAM } from "@/lib/content";
@@ -364,7 +364,7 @@ export function Hero({ guestName }: HeroProps = {}) {
           </svg>
           <p className="eyebrow sc-welcome-eyebrow">Chào mừng đến đám cưới của</p>
           <p className="display-1 sc-welcome-name">{COUPLE.groom}</p>
-          <Amp />
+          <Cross />
           <p className="display-1 sc-welcome-name">{COUPLE.bride}</p>
         </div>
 
@@ -379,7 +379,7 @@ export function Hero({ guestName }: HeroProps = {}) {
           còn lại mới xuất hiện sau khi nó đáp xong. */}
       <Image
         src={MONOGRAM.src}
-        alt="Monogram Nhat Quang & Thuy Dung"
+        alt="Monogram Nhật Quang & Thùy Dung"
         width={MONOGRAM.w}
         height={MONOGRAM.h}
         loading="eager"
@@ -444,7 +444,7 @@ export function Hero({ guestName }: HeroProps = {}) {
         </Reveal>
 
         <Reveal delay={3} className="sc-row sc-row--cross" when={open3}>
-          <Amp />
+          <Cross />
         </Reveal>
 
         <Reveal delay={3} when={open3}>

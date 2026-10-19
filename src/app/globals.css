@@ -1495,6 +1495,13 @@
     color: var(--color-ink);
   }
 
+  /* Khoảng thở quanh dấu nối hai dòng tên: tên tiếng Việt có dấu cả trên lẫn
+     dưới (Nhật / Thùy), line-height 1.05 của .display-1 không chừa đủ chỗ nên
+     thiếu margin này là dấu dính vào chữ. */
+  .sc-welcome .cross-mark {
+    margin-block: calc(var(--u) * 7);
+  }
+
   /* Monogram bắc cầu giữa hai màn: đứng im ở tâm khối chữ, vô hình cho tới
      lúc mở thiệp. */
   /* Ô monogram trong thiệp chỉ giữ chỗ — con bay tới sẽ đứng lại che lên nó */
@@ -1621,7 +1628,10 @@
     margin-top: calc(var(--u) * 12);
   }
   .sc-row--name { margin-top: calc(var(--u) * 40); }
-  .sc-row--cross { margin: calc(var(--u) * 8) 0; }
+  /* Dấu nối giữa hai dòng tên cần nhiều khoảng thở hơn bản thân nó: tên có
+     dấu cả trên lẫn dưới (Nhật / Thùy) tràn ra ngoài line-box của .display-1,
+     8u là dấu chạm vào chữ. */
+  .sc-row--cross { margin: calc(var(--u) * 14) 0; }
   .sc-row--date { margin-top: calc(var(--u) * 20); }
   .sc-row--city { margin-top: calc(var(--u) * 12); }
 
