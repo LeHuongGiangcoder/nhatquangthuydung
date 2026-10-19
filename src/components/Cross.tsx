@@ -15,12 +15,11 @@ export function Cross({
 
 
 /**
- * Dấu "&" nối tên cô dâu chú rể.
+ * Dấu "&" nối tên cô dâu chú rể: chữ "&" của chính font tên, hai bên là hai
+ * nét chỉ mảnh — đúng motif `.ornament` và dải hoa văn vẫn dùng khắp thiệp.
  *
- * Chữ "&" của font tên (Mon Cheri) quá to bản và thô so với nét chữ mảnh của
- * hai dòng tên; bản italic của font body có bụng cong mềm, thu nhỏ lại và
- * chuyển sang màu vàng đồng thì đứng giữa hai dòng như một nét trang trí chứ
- * không phải một chữ bị chèn vào tên.
+ * Bản trước lấy "&" italic của font body nên nó lạc giọng giữa khối chữ
+ * display: nhìn như một ký tự rơi vào chứ không phải một nét trang trí.
  *
  * Không đặt cỡ chữ mặc định: style inline đè cả stylesheet, nên để trống thì
  * màn chào và thiệp mới chỉnh được cỡ riêng trong CSS.

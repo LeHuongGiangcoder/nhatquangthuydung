@@ -554,13 +554,32 @@
     color: var(--color-olive);
   }
 
-  /* Dấu "&" nối hai dòng tên — xem component Amp. Cỡ chữ do từng màn tự đặt. */
+  /* Dấu "&" nối hai dòng tên — xem component Amp. Cỡ chữ, bề dài nét chỉ và
+     khoảng cách do từng màn tự đặt qua --amp-rule / --amp-gap. */
   .amp-mark {
-    display: block;
-    font-family: var(--font-body);
-    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--amp-gap, 0.75rem);
+    font-family: var(--font-display);
     line-height: 1;
-    color: var(--color-gold);
+    color: var(--color-olive-soft);
+  }
+
+  /* Nét chỉ hai bên nhạt dần về phía ngoài. Một nét đặc màu --color-line mảnh
+     1px chìm hẳn vào nền kem, nhìn như không có; nét vàng đồng tan dần thì bắt
+     đúng tông với khung nét chỉ và chùm đèn phía trên. */
+  .amp-mark::before,
+  .amp-mark::after {
+    content: "";
+    height: 1px;
+    width: var(--amp-rule, 2.5rem);
+    background: linear-gradient(to right, transparent, var(--color-gold));
+    opacity: 0.7;
+  }
+
+  .amp-mark::after {
+    background: linear-gradient(to left, transparent, var(--color-gold));
   }
 
   .ornament {
@@ -1508,8 +1527,10 @@
      dưới (Nhật / Thùy), line-height 1.05 của .display-1 không chừa đủ chỗ nên
      thiếu margin này là dấu dính vào chữ. */
   .sc-welcome .amp-mark {
-    font-size: calc(var(--u) * 21);
+    font-size: calc(var(--u) * 19);
     margin-block: calc(var(--u) * 7);
+    --amp-gap: calc(var(--u) * 11);
+    --amp-rule: calc(var(--u) * 30);
   }
 
   /* Monogram bắc cầu giữa hai màn: đứng im ở tâm khối chữ, vô hình cho tới
@@ -1642,7 +1663,11 @@
      dấu cả trên lẫn dưới (Nhật / Thùy) tràn ra ngoài line-box của .display-1,
      8u là dấu chạm vào chữ. */
   .sc-row--amp { margin: calc(var(--u) * 12) 0; }
-  .sc-row--amp .amp-mark { font-size: calc(var(--u) * 26); }
+  .sc-row--amp .amp-mark {
+    font-size: calc(var(--u) * 23);
+    --amp-gap: calc(var(--u) * 13);
+    --amp-rule: calc(var(--u) * 38);
+  }
   .sc-row--date { margin-top: calc(var(--u) * 20); }
   .sc-row--city { margin-top: calc(var(--u) * 12); }
 
