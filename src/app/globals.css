@@ -554,6 +554,15 @@
     color: var(--color-olive);
   }
 
+  /* Dấu "&" nối hai dòng tên — xem component Amp. Cỡ chữ do từng màn tự đặt. */
+  .amp-mark {
+    display: block;
+    font-family: var(--font-body);
+    font-style: italic;
+    line-height: 1;
+    color: var(--color-gold);
+  }
+
   .ornament {
     display: flex;
     align-items: center;
@@ -1498,7 +1507,8 @@
   /* Khoảng thở quanh dấu nối hai dòng tên: tên tiếng Việt có dấu cả trên lẫn
      dưới (Nhật / Thùy), line-height 1.05 của .display-1 không chừa đủ chỗ nên
      thiếu margin này là dấu dính vào chữ. */
-  .sc-welcome .cross-mark {
+  .sc-welcome .amp-mark {
+    font-size: calc(var(--u) * 21);
     margin-block: calc(var(--u) * 7);
   }
 
@@ -1631,7 +1641,8 @@
   /* Dấu nối giữa hai dòng tên cần nhiều khoảng thở hơn bản thân nó: tên có
      dấu cả trên lẫn dưới (Nhật / Thùy) tràn ra ngoài line-box của .display-1,
      8u là dấu chạm vào chữ. */
-  .sc-row--cross { margin: calc(var(--u) * 14) 0; }
+  .sc-row--amp { margin: calc(var(--u) * 12) 0; }
+  .sc-row--amp .amp-mark { font-size: calc(var(--u) * 26); }
   .sc-row--date { margin-top: calc(var(--u) * 20); }
   .sc-row--city { margin-top: calc(var(--u) * 12); }
 
@@ -2050,7 +2061,7 @@
   /* Hai tên lên CÙNG LÚC, kể cả dấu thánh giá giữa chúng. Cho lệch nhịp thì
      tên chú rể hiện trước một mình, nhìn như tên cô dâu bị quên. */
   .sc-welcome .sc-welcome-name,
-  .sc-welcome .cross-mark {
+  .sc-welcome .amp-mark {
     animation: sc-text-in 1.4s var(--ease-soft) 2.95s both;
   }
   .sc-open-btn { animation: sc-text-in 1.2s var(--ease-soft) 4.2s both; }

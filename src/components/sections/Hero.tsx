@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Cross } from "@/components/Cross";
+import { Amp } from "@/components/Cross";
 import { Reveal } from "@/components/Reveal";
 import { ART, type ArtId } from "@/lib/layers";
 import { COUPLE, HERO, MONOGRAM } from "@/lib/content";
@@ -364,7 +364,7 @@ export function Hero({ guestName }: HeroProps = {}) {
           </svg>
           <p className="eyebrow sc-welcome-eyebrow">Chào mừng đến đám cưới của</p>
           <p className="display-1 sc-welcome-name">{COUPLE.groom}</p>
-          <Cross />
+          <Amp />
           <p className="display-1 sc-welcome-name">{COUPLE.bride}</p>
         </div>
 
@@ -443,8 +443,8 @@ export function Hero({ guestName }: HeroProps = {}) {
           <h1 className="display-1 display-1--shine">{COUPLE.groom}</h1>
         </Reveal>
 
-        <Reveal delay={3} className="sc-row sc-row--cross" when={open3}>
-          <Cross />
+        <Reveal delay={3} className="sc-row sc-row--amp" when={open3}>
+          <Amp />
         </Reveal>
 
         <Reveal delay={3} when={open3}>
