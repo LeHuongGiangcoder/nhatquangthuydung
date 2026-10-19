@@ -6,6 +6,7 @@ import { Divider } from "@/components/Divider";
 import { HeadArt } from "@/components/HeadArt";
 import { Reveal } from "@/components/Reveal";
 import { PARTIES, type Party } from "@/lib/content";
+import { RSVP } from "@/lib/rsvp";
 
 type Attending = "yes" | "no";
 
@@ -16,12 +17,9 @@ type Attending = "yes" | "no";
 const PARTY_SIZES = ["1", "Trên 1"] as const;
 type PartySize = (typeof PARTY_SIZES)[number];
 
-/** Khách mở thiệp bằng link riêng /main/<slug>. */
-export type RsvpGuest = { slug: string; name?: string };
+type RsvpProps = { party?: Party };
 
-type RsvpProps = { party?: Party; guest?: RsvpGuest };
-
-export function Rsvp({ party = PARTIES.main, guest }: RsvpProps = {}) {
+export function Rsvp({ party = PARTIES.main }: RsvpProps = {}) {
   const [attending, setAttending] = useState<Attending>("yes");
   const [partySize, setPartySize] = useState<PartySize>("1");
   const [sent, setSent] = useState(false);
@@ -39,19 +37,25 @@ export function Rsvp({ party = PARTIES.main, guest }: RsvpProps = {}) {
     setError(null);
 
     try {
-      // Gửi qua route của chính site (src/app/api/rsvp) — route đó mới giữ
-      // secret của Apps Script, trình duyệt không bao giờ thấy.
-      const res = await fetch("/api/rsvp", {
+      // Ô bẫy ẩn trong form: người thật không thấy nên không điền, bot điền
+      // hết mọi ô. Coi như gửi thành công nhưng không ghi gì vào Sheet.
+      if (String(form.get("website") ?? "").trim()) {
+        setSent(true);
+        return;
+      }
+
+      // Hub là Apps Script: text/plain để trình duyệt không gửi preflight
+      // CORS (Apps Script không trả lời được preflight).
+      const res = await fetch(RSVP.endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
-          slug: guest?.slug ?? "",
-          name: String(form.get("name") ?? ""),
+          client: RSVP.client,
+          name: String(form.get("name") ?? "").trim(),
           attending: isComing,
           guests: isComing ? partySize : "",
-          companions: withCompanions ? String(form.get("companions") ?? "") : "",
-          message: String(form.get("message") ?? ""),
-          website: String(form.get("website") ?? ""),
+          companions: withCompanions ? String(form.get("companions") ?? "").trim() : "",
+          message: String(form.get("message") ?? "").trim(),
         }),
       });
       const data: { ok?: boolean } | null = await res.json().catch(() => null);
@@ -120,7 +124,6 @@ export function Rsvp({ party = PARTIES.main, guest }: RsvpProps = {}) {
                   name="name"
                   className="input"
                   placeholder="Nguyễn Văn A"
-                  defaultValue={guest?.name ?? ""}
                   maxLength={120}
                   autoComplete="name"
                   required
@@ -205,7 +208,7 @@ export function Rsvp({ party = PARTIES.main, guest }: RsvpProps = {}) {
               </div>
 
               {/* Ô bẫy chống spam: ẩn khỏi người dùng và trình đọc màn hình,
-                  chỉ bot điền vào. Route /api/rsvp bỏ qua mọi phản hồi có ô này. */}
+                  chỉ bot điền vào. Phản hồi có ô này không được gửi đi. */}
               <div className="rsvp-trap" aria-hidden>
                 <label htmlFor="rsvp-website">Website</label>
                 <input
