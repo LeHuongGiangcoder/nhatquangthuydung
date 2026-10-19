@@ -11,17 +11,18 @@ import { RSVP } from "@/lib/rsvp";
 type Attending = "yes" | "no";
 
 /**
- * Số người đi — đúng hai lựa chọn, ghi nguyên chữ vào cột Guests của sheet.
- * Chọn "Trên 1" thì phải điền tên người đi cùng (ghi vào cột Other).
+ * Số người đi — khách gõ số để cột "Số người" trong Sheet cộng được tổng.
+ * Trần 20 cho một hồi âm: cao hơn gần như chỉ là gõ nhầm.
  */
-const PARTY_SIZES = ["1", "Trên 1"] as const;
-type PartySize = (typeof PARTY_SIZES)[number];
+const MAX_PARTY_SIZE = 20;
 
 type RsvpProps = { party?: Party };
 
 export function Rsvp({ party = PARTIES.main }: RsvpProps = {}) {
   const [attending, setAttending] = useState<Attending>("yes");
-  const [partySize, setPartySize] = useState<PartySize>("1");
+  // Giữ nguyên chuỗi khách gõ: xoá trắng ô để gõ lại số khác là chuyện bình
+  // thường, ép về số ngay thì con trỏ nhảy hoặc ô tự nhảy về 1.
+  const [partySize, setPartySize] = useState("1");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +33,14 @@ export function Rsvp({ party = PARTIES.main }: RsvpProps = {}) {
 
     const form = new FormData(e.currentTarget);
     const isComing = attending === "yes";
-    const withCompanions = isComing && partySize === "Trên 1";
+    const count = Number(partySize);
+    const withCompanions = isComing && count > 1;
+
+    if (isComing && (!Number.isInteger(count) || count < 1 || count > MAX_PARTY_SIZE)) {
+      setError(`Số người tham dự nhập từ 1 đến ${MAX_PARTY_SIZE} giúp chúng mình nhé.`);
+      return;
+    }
+
     setSending(true);
     setError(null);
 
@@ -53,7 +61,7 @@ export function Rsvp({ party = PARTIES.main }: RsvpProps = {}) {
           client: RSVP.client,
           name: String(form.get("name") ?? "").trim(),
           attending: isComing,
-          guests: isComing ? partySize : "",
+          guests: isComing ? count : "",
           companions: withCompanions ? String(form.get("companions") ?? "").trim() : "",
           message: String(form.get("message") ?? "").trim(),
         }),
@@ -154,30 +162,28 @@ export function Rsvp({ party = PARTIES.main }: RsvpProps = {}) {
 
               {attending === "yes" && (
                 <div className="field">
-                  <span className="field-label" id="rsvp-guests-label">
+                  <label className="field-label" htmlFor="rsvp-guests">
                     Số người tham dự
-                  </span>
-                  <div
-                    className="choice-group"
-                    role="group"
-                    aria-labelledby="rsvp-guests-label"
-                  >
-                    {PARTY_SIZES.map((size) => (
-                      <button
-                        key={size}
-                        type="button"
-                        className="choice"
-                        aria-pressed={partySize === size}
-                        onClick={() => setPartySize(size)}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
+                  </label>
+                  <input
+                    id="rsvp-guests"
+                    name="guests"
+                    className="input input--count"
+                    type="number"
+                    // Bàn phím số trên điện thoại; type="number" một mình vẫn
+                    // mở bàn phím chữ trên một số máy Android.
+                    inputMode="numeric"
+                    min={1}
+                    max={MAX_PARTY_SIZE}
+                    step={1}
+                    value={partySize}
+                    onChange={(e) => setPartySize(e.target.value)}
+                    required
+                  />
                 </div>
               )}
 
-              {attending === "yes" && partySize === "Trên 1" && (
+              {attending === "yes" && Number(partySize) > 1 && (
                 <div className="field">
                   <label className="field-label" htmlFor="rsvp-companions">
                     Điền tên người đi cùng

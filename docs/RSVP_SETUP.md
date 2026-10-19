@@ -14,8 +14,8 @@ mọi site Glow. Hub ghi vào Google Sheet riêng của client này.
 |-----|-----------|---------|
 | Tên khách | `name` | khách tự gõ |
 | Tham dự | `attending` | `Có` / `Không` |
-| Số người | `guests` | `1` / `Trên 1` |
-| Người đi cùng | `companions` | tên người đi cùng, chỉ khi chọn "Trên 1" |
+| Số người | `guests` | số khách gõ, 1–20 (số thật để cộng tổng được) |
+| Người đi cùng | `companions` | tên người đi cùng, chỉ khi số người > 1 |
 | Lời chúc | `message` | lời chúc của khách |
 
 Hub tự thêm cột thời điểm trả lời. Đừng đổi tên tiêu đề cột: đổi rồi thì phản

@@ -717,6 +717,20 @@
     min-height: 3.5rem;
   }
 
+  /* Ô số người: hẹp lại cho đúng lượng chữ cần gõ, và bỏ nút tăng/giảm của
+     trình duyệt — hai mũi tên đè lên gạch chân của ô trông rất thô. */
+  .input--count {
+    max-width: 6rem;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .input--count::-webkit-outer-spin-button,
+  .input--count::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   /* Nhóm chọn (Có / Không) */
   .choice-group {
     display: grid;
