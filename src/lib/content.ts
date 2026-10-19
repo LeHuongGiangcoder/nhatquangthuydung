@@ -11,8 +11,8 @@
 export const SITE_URL = "https://nhatquangthuydung.gloweb.site";
 
 export const COUPLE = {
-  groom: "Nhật Quang",
-  bride: "Thùy Dung",
+  groom: "Nhat Quang",
+  bride: "Thuy Dung",
   dateDisplay: "17.04.2027",
   dateFull: "Thứ Bảy, ngày 17 tháng 04 năm 2027",
   lunar: "Nhằm ngày 11 tháng 03 năm Đinh Mùi",

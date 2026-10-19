@@ -12,3 +12,18 @@ export function Cross({
     </span>
   );
 }
+
+/** Dấu "&" nối tên cô dâu chú rể — dùng chung nhịp hiện với dấu thánh giá. */
+export function Amp({
+  size = "1.6rem",
+  className = "",
+}: {
+  size?: string;
+  className?: string;
+}) {
+  return (
+    <span aria-hidden className={`cross-mark ${className}`} style={{ fontSize: size }}>
+      &amp;
+    </span>
+  );
+}
